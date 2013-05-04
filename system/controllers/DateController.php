@@ -19,11 +19,23 @@
 	public function index()
 	{
 
+		// set up the facebook controller
+		$facebook = Core::instantiate("FacebookAPIController");
+
+		// the url to go after login
+		$redirect_uri = Asset::create_url("facebook","login");
+
+		// the login url
+		$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
+
+		// set for the view
+		$this->view_data("login_url",$url);
+
 		// load the model
 		$this->loadModel("Date");
 
-		// only get this table
-		$this->Date->options['recursive'] = 0;
+		$this->Date->options['orderBy'] = array("Shift","team_id");
+		$this->Date->options['key'] = array("Shift"=>"id");
 
 		// get all the Dates
 		$dates = $this->Date->findAll();
@@ -35,8 +47,32 @@
 		if($this->Date->success)
 		{
 
+			// get the shift member controller
+			$shift_member_controller = Core::instantiate("ShiftMemberController");
+
+			// loop through the dates
+			foreach($dates as &$date)
+			{
+				// foreach sift
+				foreach($date['Shift'] as $shift_id=>&$shift)
+				{
+					// get the members
+					$shift['members'] = $shift_member_controller->get($shift_id);
+				}
+			}
+
+			// get the team controller
+			$team_controller = Core::instantiate("TeamController");
+
+			// get all the teams
+			$teams = $team_controller->index();
+
+			// set the teams for the view
+			$this->view_data("teams",$teams);
+
 			// set the information for the view
 			$this->view_data("dates",$dates);
+
 
 			// return the information
 			return $dates;
@@ -134,10 +170,10 @@
 		// if there is an id
 		if($date_id)
 		{
-			
+
 			// get a Date
 			$this->get($date_id);
-			
+
 		}
 
 
