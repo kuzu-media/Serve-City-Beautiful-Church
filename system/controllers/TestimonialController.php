@@ -16,7 +16,7 @@
 	 * Get all the Testimonials
 	 * @return array all the Testimonials
 	 */
-	public function index()
+	public function index($id=null)
 	{
 
 		// load the model
@@ -25,8 +25,15 @@
 		// only get this table
 		$this->Testimonial->options['recursive'] = 0;
 
-		// get all the Testimonials
-		$testimonials = $this->Testimonial->findAll();
+		if($id) {
+			// get all the Testimonials for a team
+			$testimonials = $this->Testimonial->findByTeamId($id);
+		}
+
+		else {
+			// get all the Testimonials
+			$testimonials = $this->Testimonial->findAll($id);
+		}
 
 		//set the success
 		$this->view_data('success',$this->Testimonial->success);
@@ -134,10 +141,10 @@
 		// if there is an id
 		if($testimonial_id)
 		{
-			
+
 			// get a Testimonial
 			$this->get($testimonial_id);
-			
+
 		}
 
 

@@ -134,10 +134,10 @@
 		// if there is an id
 		if($team_member_id)
 		{
-			
+
 			// get a TeamMember
 			$this->get($team_member_id);
-			
+
 		}
 
 

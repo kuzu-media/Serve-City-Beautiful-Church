@@ -68,6 +68,11 @@
 			// if the call was successful
 			if($this->Team->success)
 			{
+				$testimonials_controller = Core::instantiate("TestimonialController");
+
+				$testimonials = $testimonials_controller->index($id);
+
+				$this->view_data("testimonials",$testimonials);
 
 				// set the information for the view
 				$this->view_data("team",$team[0]);
@@ -134,10 +139,10 @@
 		// if there is an id
 		if($team_id)
 		{
-			
+
 			// get a Team
 			$this->get($team_id);
-			
+
 		}
 
 
