@@ -56,11 +56,14 @@
 			// load the model
 			$this->loadModel("ShiftMember");
 
-			// only get this table
-			$this->ShiftMember->options['recursive'] = 0;
+			// just the member table
+			$this->ShiftMember->belongsTo = array("Member");
+
+			// get the belongs to
+			$this->ShiftMember->options['recursive'] = 3;
 
 			// get all the ShiftMembers
-			$shift_member = $this->ShiftMember->findById($id);
+			$shift_member = $this->ShiftMember->findByShiftId($id);
 
 			//set the success
 			$this->view_data('success',$this->ShiftMember->success);
@@ -70,10 +73,10 @@
 			{
 
 				// set the information for the view
-				$this->view_data("shift_member",$shift_member[0]);
+				$this->view_data("shift_member",$shift_member);
 
 				// return the information
-				return $shift_member[0];
+				return $shift_member;
 			}
 			return false;
 		}
@@ -89,15 +92,41 @@
 		//if information was sent
 		if($shift_member)
 		{
+			// get the shift controller
+			$shift_controller = Core::instantiate("ShiftController");
+
+			// get the current shift
+			$shift = $shift_controller->get($shift_member['shift_id']);
+
 			// load the model
 			$this->loadModel("ShiftMember");
+
+			// if we got a shift back
+			if($shift)
+			{
+
+				// I only want the id
+				$this->ShiftMember->options['fields'] = array("ShiftMember"=>array("id"));
+
+				// Match the team id in the shift table
+				$this->ShiftMember->options['where'] = array("team_id"=>array($shift['team_id'],"Shift"));
+
+				// the the shifts for this member on the team
+				$shifts = $this->ShiftMember->findByMemberId($shift_member['member_id']);
+
+				// if there is one member is a server if not they are a sheep
+				$shift_member['shift_member_type_id'] = $shift?1:2;
+
+			}
 
 			// save the new ShiftMember
 			$this->ShiftMember->save($shift_member);
 
 			// set the success
 			$this->view_data("success",$this->ShiftMember->success);
-			if(!$this->ShiftMember->success) return $this->view_data("errors",$this->ShiftMember->error);
+
+			// set the errors
+			if(!$this->ShiftMember->success) $this->view_data("errors",$this->ShiftMember->error);
 
 			// return the success
 			return $this->ShiftMember->success;
@@ -134,10 +163,10 @@
 		// if there is an id
 		if($shift_member_id)
 		{
-			
+
 			// get a ShiftMember
 			$this->get($shift_member_id);
-			
+
 		}
 
 
