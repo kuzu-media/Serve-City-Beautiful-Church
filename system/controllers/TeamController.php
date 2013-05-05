@@ -12,6 +12,9 @@
  */
  Class TeamController extends Controller
 {
+
+	public static $allowed_actions = array("index","get");
+
 	/**
 	 * Get all the Teams
 	 * @return array all the Teams

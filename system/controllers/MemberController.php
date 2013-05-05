@@ -12,6 +12,8 @@
  */
  Class MemberController extends Controller
 {
+	public static $allowed_actions = array("logout");
+
 	/**
 	 * Get all the Members
 	 * @return array all the Members
@@ -134,10 +136,10 @@
 		// if there is an id
 		if($member_id)
 		{
-			
+
 			// get a Member
 			$this->get($member_id);
-			
+
 		}
 
 
@@ -166,5 +168,15 @@
 			$this->Member->success;
 
 		}
+	}
+
+	public function logout()
+	{
+		// log the user out
+		Auth::logout();
+
+		// // redirect back to home page
+		Core::redirect("Team","Index");
+
 	}
 }

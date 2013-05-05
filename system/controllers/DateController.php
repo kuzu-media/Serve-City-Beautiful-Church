@@ -12,6 +12,8 @@
  */
  Class DateController extends Controller
 {
+	public static $allowed_actions = array("index");
+
 	/**
 	 * Get all the Dates
 	 * @return array all the Dates
@@ -73,6 +75,8 @@
 			// set the information for the view
 			$this->view_data("dates",$dates);
 
+			// if the user is logged in
+			$this->view_data("logged_in",Session::get('logged_in'));
 
 			// return the information
 			return $dates;

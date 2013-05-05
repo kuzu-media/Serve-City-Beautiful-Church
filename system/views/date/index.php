@@ -29,10 +29,13 @@
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
 								<p class="time"><?php echo $shift['time']?></p>
+								<?php $serving = false;?>
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
-									<p><?php echo $member['Member']['name'];?>
+									<?php if($logged_in && $member['Member']['id'] === Auth::user('id')) $serving = true;?>
+									<img src="<?php echo $member['Member']['profile_pic']?>" />
+									<p><?php echo $member['Member']['name'];?></p>
 								<?php endforeach; endif;?>
-								<a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a>
+								<?php if(!$serving):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
 							</div>
 						<?php $shift_count++ ;endif?>
 					<?php endforeach;?>
@@ -45,24 +48,26 @@
 	<div id="fb-root"></div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 	<?php echo Asset::js("jquery.modal.min")?>
-	<?php  $logged_in = "false"; ?>
-
 <script>
-	var logged_in = <?php echo $logged_in ?>;
+	var logged_in = "<?php  var_export($logged_in) ?>";
+	console.log("logged_in",typeof logged_in);
 	$(".serve").on('click',function(e){
 		e.preventDefault();
 
-		var button_info = $(this);
+		var button = $(this);
 
 		// if we are logged in then save it as a shift_member
-		if(logged_in)
+		if(logged_in === "true")
 		{
 			$.ajax({
 				url: '<?php echo Asset::get_base()?>ShiftMember/post',
 				type: 'post',
-				data: {"shift_id": button_info.data("shift_id")},
+				data: {"shift_id": button.data("shift_id")},
+				dataType: 'json',
 				success: function (data) {
-					data
+					var img = $("<img />").attr("src",data.member.profile_pic);
+					var name = $("<p>").text(data.member.name);
+					button.before(img).after(name).remove();
 				}
 			});
 		}
@@ -73,7 +78,7 @@
 			var href = "<?php echo $login_url ?>";
 			var vars = {};
 			var url = href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {vars[key] = decodeURIComponent(value); return "";});
-			vars['redirect_uri'] += "/"+button_info.data("shift_id");
+			vars['redirect_uri'] += "/"+button.data("shift_id");
 			$(".facebook a").attr("href",url+"?"+$.param(vars))
 		}
 	});

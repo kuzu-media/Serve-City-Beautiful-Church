@@ -12,6 +12,8 @@
  */
  Class ShiftMemberController extends Controller
 {
+	public static $allowed_actions = array("post");
+
 	/**
 	 * Get all the ShiftMembers
 	 * @return array all the ShiftMembers
@@ -98,6 +100,8 @@
 			// get the current shift
 			$shift = $shift_controller->get($shift_member['shift_id']);
 
+			if(!isset($shift_member['member_id'])) $shift_member['member_id'] = Auth::user("id");
+
 			// load the model
 			$this->loadModel("ShiftMember");
 
@@ -127,6 +131,8 @@
 
 			// set the errors
 			if(!$this->ShiftMember->success) $this->view_data("errors",$this->ShiftMember->error);
+
+			if($this->request['AJAX']) Core::redirect("Member","get",array($shift_member['member_id'].".json"));
 
 			// return the success
 			return $this->ShiftMember->success;

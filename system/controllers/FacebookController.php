@@ -1,6 +1,8 @@
 <?php
 Class FacebookController extends Controller
 {
+	public static $allowed_actions = array("register","login");
+
 	public function register($shift_id, $facebook_id, $member=NULL)
 	{
 
@@ -30,10 +32,10 @@ Class FacebookController extends Controller
 			$this->loadModel("Member");
 
 			// make phone required if they select text
-			if($member['alert_type_id'] === "2") array_push($this->Member->required, "phone");
+			if(isset($member['alert_type_id']) && $member['alert_type_id'] === "2") array_push($this->Member->required, "phone");
 
 			// save the new Member
-			$member_id = $this->Member->save($member);
+			$member['id'] = $this->Member->save($member);
 
 			// set the success
 			$this->view_data("success",$this->Member->success);
@@ -54,14 +56,14 @@ Class FacebookController extends Controller
 				// create the shift memeber
 				$shift_member = array(
 						"shift_id"=>$shift_id,
-						"member_id"=>$member_id
+						"member_id"=>$member['id']
 					);
 
 				// save the shift member
 				$shift_member_controller->post($shift_member);
 
 				// go back to the calender
-				Core::redirect("Date","index");
+				Core::redirect("date","index");
 
 				// return the success
 				return $this->Member->success;
@@ -135,14 +137,14 @@ Class FacebookController extends Controller
 					// save the shift member
 					$shift_member_controller->post($shift_member);
 
-					Core::redirect("Date","index");
+					Core::redirect("date","index");
 
 				}
 				// if it doesn't register
 				else
 				{
 
-					Core::redirect("Facebook","Register",array($shift_id,$user_id));
+					Core::redirect("facebook","register",array($shift_id,$user_id));
 
 				}
 
