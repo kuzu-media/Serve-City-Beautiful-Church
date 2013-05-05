@@ -79,6 +79,14 @@
 			var url = href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {vars[key] = decodeURIComponent(value); return "";});
 			vars['redirect_uri'] += "/"+button.data("shift_id");
 			$(".facebook a").attr("href",url+"?"+$.param(vars))
+			$(".default a").each(function()
+			{
+				var link = $(this);
+				var href = link.attr("href");
+				link.attr("href",href+"/"+button.data("shift_id"));
+
+			})
+
 		}
 	});
 
@@ -133,12 +141,12 @@
 		<div class="col-6 cols">
 			<h2>Sign In</h2>
 			<div class="facebook"><a href=""><?php echo Asset::img('login.png') ?></a></div>
-			<p class="center"><a href="" class="center">Login without Facebook</a></p>
+			<p class="center default"><a href="<?php echo Asset::create_url("member","login")?>" class="center">Login without Facebook</a></p>
 		</div>
 		<div class="col-6 cols">
 			<h2>Join Us</h2>
 			<div class="facebook"><a href=""><?php echo Asset::img('register.png') ?></a></div>
-			<p class="center"><a href="" class="center">Signup without Facebook</a></p>
+			<p class="center default"><a href="<?php echo Asset::create_url("member","post") ?>" class="center">Signup without Facebook</a></p>
 		</div>
 	</div>
 </div>

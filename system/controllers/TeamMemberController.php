@@ -97,7 +97,8 @@
 
 			// set the success
 			$this->view_data("success",$this->TeamMember->success);
-			if(!$this->TeamMember->success) return $this->view_data("errors",$this->TeamMember->error);
+
+			if(!$this->TeamMember->success) $this->view_data("errors",$this->TeamMember->error);
 
 			// return the success
 			return $this->TeamMember->success;
