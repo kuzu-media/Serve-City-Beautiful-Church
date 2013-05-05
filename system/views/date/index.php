@@ -50,7 +50,6 @@
 	<?php echo Asset::js("jquery.modal.min")?>
 <script>
 	var logged_in = "<?php  var_export($logged_in) ?>";
-	console.log("logged_in",typeof logged_in);
 	$(".serve").on('click',function(e){
 		e.preventDefault();
 
@@ -124,7 +123,6 @@
 
 </script>
 
-<div class="fb-login-button" data-show-faces="false" scope="email,user_groups" registration-url="<?php echo Asset::get_base()?>member/post"></div>
 <div class="modal" id="login">
 	<a href="#close" class="close-modal">Close</a>
 	<div class="row">
