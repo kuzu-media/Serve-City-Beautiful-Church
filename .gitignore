@@ -47,3 +47,6 @@ org.eclipse.*
 
 # Framework Simple
 Settings.php
+
+
+webroot/img/profile_pics
