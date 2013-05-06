@@ -5,7 +5,7 @@
 		<?php endif;?>
 		<h1>Welcome<?php if(isset($first_name)):?>, <?php echo $first_name ?><?php endif;?>!</h1>
 		<p class="welcome">Please fill out your settings.</p>
-		<form method='POST' action='<?=$_SERVER['REQUEST_URI'] ?>'>
+		<form method='POST' action='<?=$_SERVER['REQUEST_URI'] ?>'  enctype="multipart/form-data">
 			<?php if(isset($fields) && isset($fields['name'])):?>
 				<p class='error'><?php echo $fields['name']?></p>
 			<?php endif;?>

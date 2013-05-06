@@ -122,8 +122,21 @@
 		if($member)
 		{
 
+			// if there is a profile pic upload
+			if(isset($_FILES['profile_pic']) && !empty($_FILES['profile_pic']['name']))
+			{
+				$file_name = Asset::$paths['img']."profile_pics/pic-".time().".".pathinfo($_FILES['profile_pic']['name'])['extension'];
+				 move_uploaded_file($_FILES["profile_pic"]['tmp_name'], WEBROOT_PATH."/".$file_name);
+
+				 $member["profile_pic"] = Asset::relative_url().$file_name;
+
+			}
 			// if they didn't upload a new profile pic and there was already one set it
-			if(empty($member['profile']) && !empty($member['facebook_pic'])) $member['profile_pic'] = $member['facebook_pic'];
+			else if(!empty($member['facebook_pic']))
+			{
+				$member['profile_pic'] = $member['facebook_pic'];
+
+			}
 
 			// if there is a facebook id make it a facebook login, if not make it a default
 			$member['login_type_id']  = $facebook_id?1:2;
