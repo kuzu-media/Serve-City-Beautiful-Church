@@ -20,6 +20,22 @@
 				<label for='email'>Email:</label>
 				<input type='text' id='email' name='email' value='<?php if(isset($email)) echo $email; ?>' />
 			</div>
+			<?php if(!isset($facebook_id) || !$facebook_id):?>
+				<?php if(isset($fields) && isset($fields['password'])):?>
+					<p class='error'><?php echo $fields['password']?></p>
+				<?php endif;?>
+				<div>
+					<label for="password">Password:</label>
+					<input type="password" id="password" name="password" value="<?php if(isset($password)) echo $password; ?>" />
+				</div>
+				<?php if(isset($fields) && isset($fields['confirm'])):?>
+					<p class='error'>Passwords do not match</p>
+				<?php endif;?>
+				<div>
+					<label for="confirm">Confirm Password:</label>
+					<input type="password" id="confirm" name="confirm" value="<?php if(isset($confirm)) echo $confirm; ?>" />
+				</div>
+			<?php endif;?>
 			<?php if(isset($fields) && isset($fields['phone'])):?>
 				<p class='error'><?php echo $fields['phone']?></p>
 			<?php endif;?>

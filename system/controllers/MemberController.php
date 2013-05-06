@@ -88,6 +88,13 @@
 	 */
 	public function post($shift_id=NULL, $facebook_id=NULL, $member=NULL)
 	{
+
+		// this means the member came through the shift id becauset there wasn't one
+		if(is_array($shift_id))
+		{
+			$member = $shift_id;
+			$shift_id = NULL;
+		}
 		// these means the member came through the facebook id param
 		if(is_array($facebook_id))
 		{
@@ -267,6 +274,36 @@
 		}
 	}
 
+	public function login($shift_id, $user=NULL)
+	{
+		if($user)
+		{
+
+			if(Auth::login($user))
+			{
+				// get the shift member controller
+				$shift_member_controller = Core::instantiate("ShiftMemberController");
+
+				// create the shift member
+				$shift_member = array(
+						"shift_id"=>$shift_id,
+						"member_id"=>Auth::user('id')
+					);
+
+				// save the shift member
+				$shift_member_controller->post($shift_member);
+
+
+				Core::redirect("date","index");
+			}
+			else {
+
+				self::$success = false;
+
+				$this->view_data("errors","Email or Password is incorrect");
+			}
+		}
+	}
 	public function logout()
 	{
 		// log the user out
