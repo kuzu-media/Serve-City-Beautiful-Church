@@ -27,6 +27,14 @@ include ('Settings.php');
  */
 define("SYSTEM_PATH", __DIR__);
 
+/**
+ * webroot_path: string
+ *
+ * the path to the webroot directory
+ */
+define("WEBROOT_PATH",dirname($_SERVER['SCRIPT_FILENAME']));
+
+
 // if auth is on or session is on
 if(AUTH || SESSION)
 {

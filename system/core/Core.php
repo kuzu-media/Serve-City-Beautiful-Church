@@ -55,16 +55,6 @@ Class Core {
 		);
 
 	/**
-	 * paths: array
-	 *
-	 * the path to various asset folders
-	 *
-	 * @var [type]
-	 */
-	public static $paths;
-
-
-	/**
 	 * debug: array
 	 *
 	 * All the debug information
