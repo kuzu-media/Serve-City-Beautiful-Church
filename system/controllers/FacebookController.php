@@ -27,8 +27,9 @@ Class FacebookController extends Controller
 				// if it does then login
 				if($member)
 				{
+
 					// set the session user
-					Session::set('member',$member[0]);
+					Session::set('user',$member[0]);
 
 					// set that the user is logged in
 					Session::set('logged_in',true);

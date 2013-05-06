@@ -14,6 +14,7 @@
 {
 	public static $allowed_actions = array("logout","login","post");
 
+
 	/**
 	 * Get all the Members
 	 * @return array all the Members
@@ -140,6 +141,9 @@
 
 			// if there is a facebook id make it a facebook login, if not make it a default
 			$member['login_type_id']  = $facebook_id?1:2;
+
+			// set the member type to default
+			$member['member_type_id'] = 2;
 
 			// if there is a facebook id set it, if not then remove it
 			$member['facebook_id'] = $facebook_id?$facebook_id:NULL;

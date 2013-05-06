@@ -15,6 +15,23 @@
 
 	public static $allowed_actions = array("index","get");
 
+
+	public function before_action()
+	{
+
+		parent::before_action();
+
+		$url = Core::$info_of_url;
+
+		// if the user isn't an admin they can't see the admin action
+		if(Auth::user("member_type_id") !== "1" && Core::$info_of_url['action'] === "admin")
+		{
+
+			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);
+
+		}
+	}
+
 	/**
 	 * Get all the Teams
 	 * @return array all the Teams
@@ -174,5 +191,35 @@
 			$this->Team->success;
 
 		}
+	}
+
+	/**
+	 * Admin page
+	 * @return array all the Teams
+	 */
+	public function admin(){
+		// load the model
+		$this->loadModel("TeamMember");
+
+		// order by the team
+		$this->TeamMember->options['orderBy'] = array("TeamMember","team_id","ASC");
+
+		// get all the Teams
+		$team_members = $this->TeamMember->findAll();
+
+		//set the success
+		$this->view_data('success',$this->TeamMember->success);
+
+		// if the call was successful
+		if($this->TeamMember->success)
+		{
+			// set the information for the view
+			$this->view_data("team_members",$team_members);
+
+			// return the information
+			return $team_members;
+
+		}
+
 	}
 }

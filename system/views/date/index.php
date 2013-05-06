@@ -1,5 +1,5 @@
 <div class="row">
-	<div id="calendar">
+	<div class="table cols">
 		<div class="row">
 			<div class="cols col-3 title">
 				<h2>Areas</h2>
@@ -30,10 +30,13 @@
 							<div class="shift">
 								<p class="time"><?php echo $shift['time']?></p>
 								<?php $serving = false;?>
+
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
-									<?php if($logged_in && $member['Member']['id'] === Auth::user('id')) $serving = true;?>
-									<img src="<?php echo $member['Member']['profile_pic']?>" />
-									<p><?php echo $member['Member']['name'];?></p>
+									<a href="#" class="name">
+										<?php if($logged_in && $member['Member']['id'] === Auth::user('id')) $serving = true;?>
+										<img src="<?php echo $member['Member']['profile_pic']?>" />
+										<p><?php echo $member['Member']['name'];?></p>
+									</a>
 								<?php endforeach; endif;?>
 								<?php if(!$serving):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
 							</div>

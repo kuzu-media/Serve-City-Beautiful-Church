@@ -178,15 +178,15 @@ footer {
 .facebook {
   margin: 20px 0 10px; }
 
-#calendar {
+.table {
   display: table;
-  width: 95%;
-  margin: 2.5%;
+  width: 99%;
+  margin: 2.5% 0;
   border-left: 1px solid #666666;
   border-bottom: 1px solid #666666; }
-  #calendar .row {
+  .table .row {
     display: table-row; }
-  #calendar .cols {
+  .table .cols {
     margin: 0;
     display: table-cell;
     border-right: 1px solid #666666;
@@ -195,14 +195,36 @@ footer {
     vertical-align: middle;
     padding: 1%;
     width: 18%; }
-  #calendar .time {
+  .table .time {
     font-weight: 700; }
-  #calendar .title {
-    padding: 0; }
-    #calendar .title h2 {
+  .table .title {
+    padding: 0;
+    background-color: #383838; }
+    .table .title h2 {
       width: 100%;
       margin: 0;
       padding: 2% 0; }
+  .table .name {
+    vertical-align: middle;
+    line-height: 25px;
+    margin: 2% 0; }
+    .table .name img {
+      float: left;
+      height: 25px;
+      width: auto;
+      margin-right: 2%; }
+  .table a.name {
+    display: block; }
+  .table .icons {
+    vertical-align: middle; }
+    .table .icons a {
+      display: block;
+      line-height: 25px;
+      vertical-align: middle; }
+    .table .icons img {
+      height: 25px;
+      float: left;
+      margin-right: 2%; }
 
 .modal {
   display: none;
