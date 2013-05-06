@@ -127,10 +127,10 @@ Class Auth {
 			if($model->success && !empty($user_returned)) {
 
 				// get rie of the password field out of the user_returned
-				unset($user_returned['User'][AUTH_PASSWORD_FIELD]);
+				unset($user_returned[AUTH_PASSWORD_FIELD]);
 
 				// set the session user
-				Session::set('user',$user_returned['User']);
+				Session::set('user',$user_returned);
 
 				// set that the user is logged in
 				Session::set('logged_in',true);

@@ -400,7 +400,7 @@ Class ORM extends Database {
 		$valid = true;
 
 		// before validation run this function
-		if(Hook::call("before_validation", array(&$this->_data)) === false) return;
+		if(Hook::call("before_validation", array(&$this->_data,&$this->rules)) === false) return;
 
 		// create the validtor
 		$validator = new Validation();

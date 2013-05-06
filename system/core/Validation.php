@@ -378,8 +378,7 @@ class Validation {
 	 */
 	private function _equalTo($val,$col,$value) {
 		$errorString = isset($value["error"])?$value["error"]:"does not match";
-		$compareTo = isset($value[0])?$value[0]:$value;
-		return $this->_createError($col,$errorString,($check === $compareTo));
+		return $this->_createError($col,$errorString,($val === $value));
 	}
 
 	/**
