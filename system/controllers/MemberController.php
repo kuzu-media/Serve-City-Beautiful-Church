@@ -234,6 +234,10 @@
 	public function update($member_id=NULL,$member=NULL)
 	{
 
+		echo "<pre>";
+		var_dump($member_id);
+		var_dump($member);
+		echo "</pre>";
 		// if information was sent
 		if($member)
 		{

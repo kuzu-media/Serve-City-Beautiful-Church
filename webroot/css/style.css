@@ -184,6 +184,17 @@ footer {
   margin: 2.5% 0;
   border-left: 1px solid #666666;
   border-bottom: 1px solid #666666; }
+  .table .tooltip .bucket {
+    display: none;
+    position: absolute;
+    border: 1px solid #383838;
+    width: 20%;
+    z-index: 3;
+    font-size: 75%;
+    margin: 0;
+    padding: 0 0.5% 0.5% 0.5%; }
+  .table .tooltip:hover .bucket {
+    display: block; }
   .table .row {
     display: table-row; }
   .table .cols {
@@ -200,6 +211,10 @@ footer {
   .table .title {
     padding: 0;
     background-color: #383838; }
+    .table .title .info {
+      display: inline;
+      vertical-align: top;
+      height: 20px; }
     .table .title h2 {
       width: 100%;
       margin: 0;
@@ -215,16 +230,9 @@ footer {
       margin-right: 2%; }
   .table a.name {
     display: block; }
-  .table .icons {
-    vertical-align: middle; }
-    .table .icons a {
-      display: block;
-      line-height: 25px;
-      vertical-align: middle; }
-    .table .icons img {
-      height: 25px;
-      float: left;
-      margin-right: 2%; }
+  .table .update img {
+    vertical-align: middle;
+    display: inline; }
 
 .modal {
   display: none;

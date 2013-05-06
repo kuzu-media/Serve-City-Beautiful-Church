@@ -6,6 +6,27 @@
 	border-left: 1px solid $light-gray
 	border-bottom: 1px solid $light-gray
 
+	.tooltip
+
+		//position: relative
+
+		.bucket
+
+			display: none
+			position: absolute
+			border: 1px solid $gray
+			width: 20%
+			z-index: 3
+			font-size: 75%
+			margin: 0
+			padding: 0 .5% .5% .5%
+
+		&:hover
+
+			.bucket
+
+				display: block
+
 	.row
 		display: table-row
 
@@ -28,6 +49,12 @@
 
 		padding: 0
 		background-color: $gray
+
+		.info
+
+			display: inline
+			vertical-align: top
+			height: 20px
 
 
 		h2
@@ -53,18 +80,11 @@
 
 		display: block
 
-	.icons
 
-		vertical-align: middle
 
-		a
-
-			display: block
-			line-height: 25px
-			vertical-align: middle
+	.update
 
 		img
 
-			height: 25px
-			float: left
-			margin-right: 2%
+			vertical-align: middle
+			display: inline

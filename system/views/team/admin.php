@@ -16,8 +16,19 @@
 				<div class="cols title"><h2>name</h2></div>
 				<div class="cols title"><h2>email</h2></div>
 				<div class="cols title"><h2>phone</h2></div>
-				<div class="cols title"><h2>Position</h2></div>
-				<div class="cols title"><h2></h2></div>
+				<div class="cols title">
+					<div class="tooltip">
+						<h2>Status <?php echo Asset::img("info.png",array("class"=>"info"))?></h2>
+						<div class="bucket">
+							<h3>Team Leader</h3>
+							<p>Has access to admin section where they can see member names, emails and phone numbers and schedule people</p>
+							<h3>Shepard</h3>
+							<p>Gets notified when a new member joins the team</p>
+							<h3>Server</h3>
+							<p>Basic member, can sign up to serve and modify settings</p>
+						</div>
+					</div>
+				</div>
 	<?php endif;?>
 				<div class="row">
 					<div class='cols name'>
@@ -25,14 +36,14 @@
 					</div>
 					<div class='cols'><?php echo $team_member['Member']['email'] ?></div>
 					<div class='cols'><?php echo $team_member['Member']['phone'] ?></div>
-					<div class='cols'><?php if($team_member['Member']['member_type_id'] === "1")echo "Team Leader/"; if($team_member['TeamMemberType']['id'] === "1") echo "Shepherd";else echo "Server"; ?></div>
-					<div class="cols icons">
-						<a href="<?php echo Asset::create_url("TeamMember","Update")?>">
-							<?php echo Asset::img("edit.png",array("alt"=>"Edit","height"=>25)) ?>Edit Position
-						</a>
-						<a href="<?php echo Asset::create_url("TeamMember","Delete")?>">
-								<?php echo  Asset::img("archive.png",array("alt"=>"archive")) ?> Archive
-						</a>
+					<div class='cols'>
+						<select id="update-<?php echo $team_member['TeamMember']['id']?>" data-team-member-id="<?php echo $team_member['TeamMember']['id']?>" data-member-id="<?php echo $team_member['Member']['id']?>">
+							<option data-member-type-id="1" data-team-member-type-id="1" <?php if($team_member['Member']['member_type_id'] === "1")echo "selected"?>>Team Leader</option>
+							<option data-member-type-id="2" data-team-member-type-id="1" <?php if($team_member['Member']['member_type_id'] !== "1" && $team_member['TeamMemberType']['id'] === "1") echo "selected" ?>>Shepherd</option>
+							<option data-member-type-id="2" data-team-member-type-id="2" <?php if($team_member['Member']['member_type_id'] !== "1" && $team_member['TeamMemberType']['id'] === "2") echo "selected" ?>>Sever</option>
+							<option data-member-type-id="<?php echo $team_member['Member']['member_type_id']?>" data-team-member-type-id="3" <?php if($team_member['TeamMemberType']['id'] === "3") echo "selected" ?>>Archive</option>
+						</select>
+						<a href="#update-<?php echo $team_member['TeamMember']['id']?>" class="update"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
 					</div>
 				</div>
 
@@ -41,3 +52,43 @@
 		</div>
 	</div>
 </div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script>
+	$(".update").on('click',function(event)
+	{
+		event.preventDefault();
+		var link = $(this);
+		var select = $(link.attr('href'));
+		var selected = select.find(":selected");
+
+		console.log('<?php echo Asset::relative_url() ?>'+selected.data("update-type")+"/update/"+selected.data("update-id"))
+		var data = {id:selected.data("update-id")}
+		data[selected.data("update")] = selected.val();
+
+		$.ajax({
+				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id"),
+				type: 'post',
+				data: {
+					id: select.data("member-id"),
+					"member_type_id": selected.data("member-type-id")
+				},
+				success: function (data) {
+					data
+				}
+			});
+
+		$.ajax({
+				url: '<?php echo Asset::relative_url() ?>'+"teamMember/update/"+select.data("team-member-id"),
+				type: 'post',
+				data: {
+					id: select.data("team-member-id"),
+					"team_member_type_id": selected.data("team-member-type-id")
+				},
+				success: function (data) {
+					data
+				}
+			});
+		console.log("selected",selected);
+
+	});
+</script>
