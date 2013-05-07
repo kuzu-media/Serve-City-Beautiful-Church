@@ -6,6 +6,12 @@ Class FacebookController extends Controller
 	public function login($shift_id)
 	{
 
+		if(is_array($shift_id))
+		{
+
+			$params = $shift_id;
+			$shift_id = -1;
+		}
 		// we got a user back from facebook
 		if(!isset($_GET['error']))
 		{

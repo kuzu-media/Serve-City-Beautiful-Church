@@ -120,6 +120,20 @@
 			$facebook_id = NULL;
 
 		}
+		if(!$facebook_id)
+		{
+			// set up the facebook controller
+			$facebook = Core::instantiate("FacebookAPIController");
+
+			// the url to go after login
+			$redirect_uri = Asset::create_url("facebook","login");
+
+			// the login url
+			$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
+
+			// set for the view
+			$this->view_data("login_url",$url);
+		}
 
 		// get the teams
 		$this->_get_teams();
@@ -164,17 +178,21 @@
 				// save the weeks for this member
 				$this->_set_weeks($member);
 
-				// get the shift member controller
-				$shift_member_controller = Core::instantiate("ShiftMemberController");
+				if($shift_id && $shift_id !== "-1")
+				{
+					// get the shift member controller
+					$shift_member_controller = Core::instantiate("ShiftMemberController");
 
-				// create the shift member
-				$shift_member = array(
+					// create the shift member
+					$shift_member = array(
 						"shift_id"=>$shift_id,
 						"member_id"=>$member['id']
 					);
 
-				// save the shift member
-				$shift_member_controller->post($shift_member);
+					// save the shift member
+					$shift_member_controller->post($shift_member);
+
+				}
 
 				// go back to the calender
 				Core::redirect("date","index");
@@ -195,6 +213,7 @@
 		}
 		else if($facebook_id)
 		{
+
 			$facebook = Core::instantiate("FacebookAPIController");
 
 			$member = $facebook->api('/me','GET');
@@ -440,7 +459,8 @@
 		// if there is a profile pic upload
 		if(isset($_FILES['profile_pic']) && !empty($_FILES['profile_pic']['name']))
 		{
-			$file_name = Asset::$paths['img']."profile_pics/pic-".time().".".pathinfo($_FILES['profile_pic']['name'])['extension'];
+			$extension = pathinfo($_FILES['profile_pic']['name']);
+			$file_name = Asset::$paths['img']."profile_pics/pic-".time().".".$extension['extension'];
 			 move_uploaded_file($_FILES["profile_pic"]['tmp_name'], WEBROOT_PATH."/".$file_name);
 
 			 $member["profile_pic"] = Asset::relative_url().$file_name;

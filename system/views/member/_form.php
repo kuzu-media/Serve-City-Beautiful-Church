@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row" id="register">
 	<div class="cols bucket">
 		<?php if(isset($code) && $code === 2):?>
 			<p class="error"><strong>Oh No!</strong> Something went wrong. See below to find out what.</p>
@@ -8,6 +8,9 @@
 		<?php endif;?>
 		<h1>Welcome<?php if(isset($first_name)):?>, <?php echo $first_name ?><?php endif;?>!</h1>
 		<p class="welcome">Please fill out your settings.</p>
+		<?php if(!isset($facebook_id) || !$facebook_id):?>
+			<div class="facebook"><a href="<?php echo $login_url ?>"><?php echo Asset::img('register.png') ?></a></div>
+		<?php endif;?>
 		<form method='POST' action='<?=$_SERVER['REQUEST_URI'] ?>'  enctype="multipart/form-data">
 			<?php if(isset($fields) && isset($fields['name'])):?>
 				<p class='error'><?php echo $fields['name']?></p>

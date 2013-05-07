@@ -69,7 +69,8 @@
 				success: function (data) {
 					var img = $("<img />").attr("src",data.member.profile_pic);
 					var name = $("<p>").text(data.member.name);
-					button.before(img).after(name).remove();
+					var a = $("<a>").addClass("name").append(img).append(name);
+					button.replaceWith(a).remove();
 				}
 			});
 		}
