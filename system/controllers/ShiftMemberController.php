@@ -121,7 +121,7 @@
 
 				$this->loadModel("Member");
 				$this->Member->options['recursive'] = 0;
-				$this->Member->options['fields'] = array("Member"=>array("id","name","profile_pic"));
+				$this->Member->options['fields'] = array("Member"=>array("id","name","profile_pic","facebook_id"));
 				$member = $this->Member->findById($shift_member['member_id']);
 
 				// if they have had previous shifts on this team then they are a server

@@ -32,11 +32,23 @@
 								<?php $serving = false;?>
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
-									<a href="#" class="name">
+									<?php
+										if($member['Member']['facebook_id'])
+										{
+											$opening_tag = "<a href='http://facebook.com/".$member['Member']['facebook_id']."' class='name'>";
+											$closing_tag = "</a>";
+										}
+										else
+										{
+											$opening_tag = "<div class='name'>";
+											$closing_tag = "</div>";
+										}
+									?>
+									<?php echo $opening_tag ?>
 										<?php if($logged_in && $member['Member']['id'] === Auth::user('id')) $serving = true;?>
 										<img src="<?php echo $member['Member']['profile_pic']?>" />
 										<p><?php echo $member['Member']['name'];?></p>
-									</a>
+									<?php echo $closing_tag ?>
 								<?php endforeach; endif;?>
 								<?php if(!$serving):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
 							</div>
@@ -52,6 +64,9 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
 	<?php echo Asset::js("jquery.modal.min")?>
 <script>
+
+jQuery(document).ready(function($) {
+
 	var logged_in = "<?php  var_export($logged_in) ?>";
 	$(".serve").on('click',function(e){
 		e.preventDefault();
@@ -69,8 +84,15 @@
 				success: function (data) {
 					var img = $("<img />").attr("src",data.member.profile_pic);
 					var name = $("<p>").text(data.member.name);
-					var a = $("<a>").addClass("name").append(img).append(name);
-					button.replaceWith(a).remove();
+					if(data.member.facebook_id)
+					{
+						var a = $("<a>").addClass("name").attr("href","http://facebook.com/"+data.member.facebook_id).append(img).append(name)
+					}
+					else
+					{
+						var a = $("<div>").addClass("name").append(img).append(name);
+					}
+					button.replaceWith(a);
 				}
 			});
 		}
@@ -94,46 +116,20 @@
 		}
 	});
 
-	window.fbAsyncInit = function() {
-
-		// setup FB
-		FB.init({
-			appId      : '541318462573151', // App ID
-			channelUrl : "<?php echo Asset::get_base();?>channel.php", // Channel File
-			status     : true, // check login status
-			cookie     : true, // enable cookies to allow the server to access the session
-			xfbml      : true  // parse XFBML,
-		});
-
-
-		 // Check Group Status
-		var check_groups = function() {
-			FB.api('/me/groups',function(response){
-				var invite = true;
-				$.each(response.data, function()
-				{
-					if(this.name === "Ops Team") {
-						invite = false;
-						return;
-					}
-				});
-
-				console.log("invite",invite);
-			});
-		}
-
-
-	};
-	// Load the SDK Asynchronously
-	(function(d){
-		var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-		if (d.getElementById(id)) {return;}
-		js = d.createElement('script'); js.id = id; js.async = true;
-		js.src = "//connect.facebook.net/en_US/all.js";
-		ref.parentNode.insertBefore(js, ref);
-	}(document));
-
+	<?php if($first):?>
+		$("#first").modal();
+	<?php endif;?>
+});
 </script>
+<?php if($first):?>
+<div class="modal" id="first">
+	<a href="#close" class="close-modal">Close</a>
+	<div class="row">
+		<h1 class="cols">Thanks for Joining Us!</h1>
+		<p class="cols">To learn more about us and keep up to date be sure to join the Ops Team Facebook Group!<br />&nbsp;<a href="https://www.facebook.com/groups/345282898925907/"><?php echo Asset::img('ops.png') ?></a></p>
+	</div>
+</div>
+<?php endif;?>
 
 <div class="modal" id="login">
 	<a href="#close" class="close-modal">Close</a>

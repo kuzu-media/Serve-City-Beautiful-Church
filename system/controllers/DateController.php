@@ -18,8 +18,11 @@
 	 * Get all the Dates
 	 * @return array all the Dates
 	 */
-	public function index()
+	public function index($first=NULL)
 	{
+
+		// if this is the first time they came to this page
+		$this->view_data("first",$first);
 
 		// set up the facebook controller
 		$facebook = Core::instantiate("FacebookAPIController");
