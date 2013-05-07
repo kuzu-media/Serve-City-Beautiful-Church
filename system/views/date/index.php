@@ -62,7 +62,7 @@
 		if(logged_in === "true")
 		{
 			$.ajax({
-				url: '<?php echo Asset::get_base()?>ShiftMember/post',
+				url: '<?php echo Asset::get_base()?>ShiftMember/post.json',
 				type: 'post',
 				data: {"shift_id": button.data("shift_id")},
 				dataType: 'json',

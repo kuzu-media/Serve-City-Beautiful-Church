@@ -147,7 +147,7 @@ Class Core {
 			return;
 		}
 		else {
-			trigger_error("404: ".$classname." Not Found",E_USER_ERROR);
+			trigger_error("404: ".$classname." Not Found",E_USER_NOTICE);
 			return;
 		}
 	}

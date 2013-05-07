@@ -105,6 +105,7 @@
 			// load the model
 			$this->loadModel("ShiftMember");
 
+
 			// if we got a shift back
 			if($shift)
 			{
@@ -113,13 +114,58 @@
 				$this->ShiftMember->options['fields'] = array("ShiftMember"=>array("id"));
 
 				// Match the team id in the shift table
-				$this->ShiftMember->options['where'] = array("team_id"=>array($shift['team_id'],"Shift"));
+				$this->ShiftMember->options['where'] = array("team_id"=>array($shift['Shift']['team_id'],"Shift"));
 
 				// the the shifts for this member on the team
 				$shifts = $this->ShiftMember->findByMemberId($shift_member['member_id']);
 
-				// if there is one member is a server if not they are a sheep
-				$shift_member['shift_member_type_id'] = $shift?1:2;
+				$this->loadModel("Member");
+				$this->Member->options['recursive'] = 0;
+				$this->Member->options['fields'] = array("Member"=>array("id","name","profile_pic"));
+				$member = $this->Member->findById($shift_member['member_id']);
+
+				// if they have had previous shifts on this team then they are a server
+				if($shifts)
+				{
+					$shift_member['shift_member_type_id'] = 1;
+				}
+				// if they haven't then they are sheep
+				else {
+
+					$shift_member['shift_member_type_id'] = 2;
+
+					// get the shepherds for this team
+					$this->loadModel('TeamMember');
+					$this->TeamMember->options['recursive'] = 1;
+					$this->TeamMember->belongsTo = array("Member");
+					$this->TeamMember->options['fields'] = array(
+						"Member"=>array("id","phone"),
+						"TeamMember"=>array("id","team_id","member_id","team_member_type_id")
+					);
+
+					$shepherds = $this->TeamMember->findByTeamIdAndTeamMemberTypeId($shift['Shift']['team_id'],1);
+
+					// if we have a member and at least on shepherd
+					if($member && $shepherds)
+					{
+						// we are going to send a message to each sheperd
+						foreach($shepherds as $shepherd)
+						{
+							// format the shepherds phone
+							$phone = preg_replace('/[\D]/', "", $shepherd['Member']['phone']);
+
+							// create a message with the sheeps number and the date and time they are serving.
+							$message = "Hey! ".$member[0]['name']." just signed up to serve on ".$shift['Date']['date']." at ".$shift['Shift']['time'].". It's their first time, so be sure to welcome them!";
+
+							// send a message using twilio
+							$twilio = Core::instantiate("TwilioController");
+							$message = $twilio->account->sms_messages->create("4073783757",$phone,$message);
+
+						}
+
+					}
+
+				}
 
 			}
 
@@ -129,10 +175,11 @@
 			// set the success
 			$this->view_data("success",$this->ShiftMember->success);
 
+			// set the member
+			if($this->Member->success) $this->view_data("member",$member[0]);
+
 			// set the errors
 			if(!$this->ShiftMember->success) $this->view_data("errors",$this->ShiftMember->error);
-
-			if($this->request['AJAX']) Core::redirect("Member","get",array($shift_member['member_id'].".json"));
 
 			// return the success
 			return $this->ShiftMember->success;

@@ -56,8 +56,10 @@
 			// load the model
 			$this->loadModel("Shift");
 
-			// only get this table
-			$this->Shift->options['recursive'] = 0;
+			// get the date table
+			$this->Shift->options['recursive'] = 1;
+
+			$this->Shift->belongsTo = array("Date");
 
 			// get all the Shifts
 			$shift = $this->Shift->findById($id);
@@ -134,10 +136,10 @@
 		// if there is an id
 		if($shift_id)
 		{
-			
+
 			// get a Shift
 			$this->get($shift_id);
-			
+
 		}
 
 
