@@ -283,6 +283,9 @@ footer {
   -ms-border-radius: 8px;
   border-radius: 8px; }
 
+#register .facebook img {
+  margin: 0; }
+
 .bucket .welcome {
   overflow: hidden;
   vertical-align: middle; }
@@ -315,7 +318,7 @@ form input {
   float: left;
   clear: both;
   margin: 7px; }
-  form input[type="text"] {
+  form input[type="text"], form input[type="password"] {
     width: 45%;
     -moz-box-shadow: 0px 0px 2px #44c99f;
     -webkit-box-shadow: 0px 0px 2px 0px #44c99f;

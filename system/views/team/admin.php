@@ -66,7 +66,7 @@
 		data[selected.data("update")] = selected.val();
 
 		$.ajax({
-				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id"),
+				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id")+".json",
 				type: 'post',
 				data: {
 					id: select.data("member-id"),
@@ -78,7 +78,7 @@
 			});
 
 		$.ajax({
-				url: '<?php echo Asset::relative_url() ?>'+"teamMember/update/"+select.data("team-member-id"),
+				url: '<?php echo Asset::relative_url() ?>'+"teamMember/update/"+select.data("team-member-id")+".json",
 				type: 'post',
 				data: {
 					id: select.data("team-member-id"),
