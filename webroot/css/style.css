@@ -297,6 +297,13 @@ footer {
   padding: 1%;
   margin: 1.5% 0; }
 
+.row .bucket .success {
+  border: 1px solid #44c99f;
+  background-color: #e2f7f0;
+  color: #44c99f;
+  padding: 1%;
+  margin: 1.5% 0; }
+
 form div {
   margin: 10px 0;
   overflow: hidden; }

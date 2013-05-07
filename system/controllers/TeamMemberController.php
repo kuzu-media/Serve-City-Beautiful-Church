@@ -16,7 +16,7 @@
 	 * Get all the TeamMembers
 	 * @return array all the TeamMembers
 	 */
-	public function index()
+	public function index($id=NULL)
 	{
 
 		// load the model
@@ -25,8 +25,15 @@
 		// only get this table
 		$this->TeamMember->options['recursive'] = 0;
 
-		// get all the TeamMembers
-		$team_members = $this->TeamMember->findAll();
+		if($id) {
+			// get all the TeamMembers for a member
+			$team_members = $this->TeamMember->findByMemberId($id);
+		}
+
+		else {
+			// get all the TeamMembers
+			$team_members = $this->TeamMember->findAll($id);
+		}
 
 		//set the success
 		$this->view_data('success',$this->TeamMember->success);
@@ -42,6 +49,8 @@
 			return $team_members;
 
 		}
+
+		return false;
 	}
 	/**
 	 * Get one TeamMember

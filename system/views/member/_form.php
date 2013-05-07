@@ -3,6 +3,9 @@
 		<?php if(isset($code) && $code === 2):?>
 			<p class="error"><strong>Oh No!</strong> Something went wrong. See below to find out what.</p>
 		<?php endif;?>
+		<?php if((isset($success) && $success === true) ||  isset($code) && $code === 3):?>
+			<p class="success"><strong>Success!</strong> Your settings have been updated.</p>
+		<?php endif;?>
 		<h1>Welcome<?php if(isset($first_name)):?>, <?php echo $first_name ?><?php endif;?>!</h1>
 		<p class="welcome">Please fill out your settings.</p>
 		<form method='POST' action='<?=$_SERVER['REQUEST_URI'] ?>'  enctype="multipart/form-data">
@@ -57,8 +60,8 @@
 			</div>
 			<div>
 				<label>I would like to serve in the following ways:</label>
-				<?php foreach($teams as $team_field):?>
-				<input type="checkbox" name="teams[]" id="<?php echo $team_field['name']?>" value="<?php echo $team_field['id']?>" <?php if(isset($team) && in_array($team_field['id'], $team)) echo "checked";?>>
+				<?php foreach($team_names as $team_field):?>
+				<input type="checkbox" name="teams[]" id="<?php echo $team_field['name']?>" value="<?php echo $team_field['id']?>" <?php if(isset($teams) && in_array($team_field['id'], $teams)) echo "checked";?>>
 				<label for="<?php echo $team_field['name']?>" class="check_label"><a href="<?php echo Asset::create_url("Team","Get",array($team_field['id']))?>"><?php echo $team_field['name']?></a></label>
 
 				<?php endforeach;?>
@@ -80,17 +83,17 @@
 			</div>
 			<div>
 				<label>I would like to serve the following Sundays of the month:</label>
-				<input type="checkbox" name="week[]" id="First" value="1" <?php if(isset($week) && in_array("1", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="First" value="1" <?php if(isset($weeks) && in_array("1", $weeks)) echo "checked";?>>
 				<label for="First" class="check_label">First</label>
-				<input type="checkbox" name="week[]" id="Second" value="2" <?php if(isset($week) && in_array("2", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="Second" value="2" <?php if(isset($weeks) && in_array("2", $weeks)) echo "checked";?>>
 				<label for="Second" class="check_label">Second</label>
-				<input type="checkbox" name="week[]" id="Third" value="3" <?php if(isset($week) && in_array("3", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="Third" value="3" <?php if(isset($weeks) && in_array("3", $weeks)) echo "checked";?>>
 				<label for="Third" class="check_label">Third</label>
-				<input type="checkbox" name="week[]" id="Forth" value="4" <?php if(isset($week) && in_array("4", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="Forth" value="4" <?php if(isset($weeks) && in_array("4", $weeks)) echo "checked";?>>
 				<label for="Forth" class="check_label">Forth</label>
-				<input type="checkbox" name="week[]" id="Fifth" value="5" <?php if(isset($week) && in_array("5", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="Fifth" value="5" <?php if(isset($weeks) && in_array("5", $weeks)) echo "checked";?>>
 				<label for="Fifth" class="check_label">Fifth</label>
-				<input type="checkbox" name="week[]" id="None" value="6" <?php if(isset($week) && in_array("6", $week)) echo "checked";?>>
+				<input type="checkbox" name="weeks[]" id="None" value="6" <?php if(isset($weeks) && in_array("6", $weeks)) echo "checked";?>>
 				<label for="None" class="check_label">No Preference</label>
 			</div>
 			<?php if(isset($fields) && isset($fields['alert_type_id'])):?>

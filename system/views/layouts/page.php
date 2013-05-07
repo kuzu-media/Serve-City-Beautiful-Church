@@ -17,9 +17,9 @@
 
 				<a href="<?php echo Asset::create_url("team","index")?>#areas">Areas to Serve</a>
 				<a href="<?php echo Asset::create_url("date","index")?>">Current Schedule</a>
-				<a href="">Update my Settings</a>
+				<?php if(Session::get('logged_in')):?><a href="<?php echo Asset::create_url("Member","Update",array( Auth::user('id') ) )?>">Update my Settings</a><?endif;?>
 			</nav>
-			<a href="<?php echo Asset::create_url("pages","join")?>" class="button">I am interested in serving</a>
+			<a href="<?php echo Asset::create_url("member","post")?>" class="button">I am interested in serving</a>
 		</div>
 	</div>
 	<?php echo $content_for_layout?>

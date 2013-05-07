@@ -60,7 +60,11 @@
 			$this->loadModel("Member");
 
 			// only get this table
-			$this->Member->options['recursive'] = 0;
+			$this->Member->options['recursive'] = 3;
+			$this->Member->hasMany = array("TeamMember","MemberWeek");
+			$this->Member->options['fields'] = array("Member"=>array("id","facebook_id","name","email","phone","profile_pic","times","reminder_day_id","alert_type_id"),"TeamMember"=>array("id","team_id"),"MemberWeek"=>array("id","week_id"));
+
+
 
 			// get all the Members
 			$member = $this->Member->findById($id);
@@ -72,8 +76,21 @@
 			if($this->Member->success)
 			{
 
+				$member_info = $member[0]['Member'];
+				$member_info['teams'] = array();
+				$member_info['weeks'] = array();
+				foreach($member[0]['TeamMember'] as $team)
+				{
+					array_push($member_info['teams'], $team['team_id']);
+				}
+
+				foreach($member[0]['MemberWeek'] as $week)
+				{
+					array_push($member_info['weeks'], $week['week_id']);
+				}
+
 				// set the information for the view
-				$this->view_data("member",$member[0]);
+				$this->view_data("member",$member_info);
 
 				// return the information
 				return $member[0];
@@ -104,40 +121,14 @@
 
 		}
 
-		// load the team model
-		$this->loadModel("Team");
-
-		// on get this table
-		$this->Team->options['recursive'] = 0;
-
-		// only get the id and name
-		$this->Team->options['fields'] = array("Team"=>array("id","name"));
-
-		// get all of them
-		$teams = $this->Team->findAll();
-
-		// set the teams for the view
-		$this->view_data("teams",$teams);
+		// get the teams
+		$this->_get_teams();
 
 		//if information was sent
 		if($member)
 		{
 
-			// if there is a profile pic upload
-			if(isset($_FILES['profile_pic']) && !empty($_FILES['profile_pic']['name']))
-			{
-				$file_name = Asset::$paths['img']."profile_pics/pic-".time().".".pathinfo($_FILES['profile_pic']['name'])['extension'];
-				 move_uploaded_file($_FILES["profile_pic"]['tmp_name'], WEBROOT_PATH."/".$file_name);
-
-				 $member["profile_pic"] = Asset::relative_url().$file_name;
-
-			}
-			// if they didn't upload a new profile pic and there was already one set it
-			else if(!empty($member['facebook_pic']))
-			{
-				$member['profile_pic'] = $member['facebook_pic'];
-
-			}
+			$this->_set_profile_pic($member);
 
 			// if there is a facebook id make it a facebook login, if not make it a default
 			$member['login_type_id']  = $facebook_id?1:2;
@@ -167,20 +158,11 @@
 				// set that the user is logged in
 				Session::set('logged_in',true);
 
-				// if there are teams
-				if(isset($member['teams']))
-				{
-					// get the team member controller
-					$team_member_controller = Core::instantiate("TeamMemberController");
+				// save the teams for this member
+				$this->_set_teams($member);
 
-					// loop throught the teams selected
-					foreach($member['teams'] as $team_id)
-					{
-						// save each team member
-						$team_member_controller->post(array("team_id"=>$team_id,"member_id"=>$member['id'],"team_member_type_id"=>2));
-					}
-
-				}
+				// save the weeks for this member
+				$this->_set_weeks($member);
 
 				// get the shift member controller
 				$shift_member_controller = Core::instantiate("ShiftMemberController");
@@ -234,15 +216,29 @@
 	public function update($member_id=NULL,$member=NULL)
 	{
 
-		echo "<pre>";
-		var_dump($member_id);
-		var_dump($member);
-		echo "</pre>";
+		// get the teams for the checkboxs
+		$this->_get_teams();
+
 		// if information was sent
 		if($member)
 		{
+			// set the member id
+			$member['id'] = $member_id;
+
+			// set the profile pic for save
+			$this->_set_profile_pic($member);
+
+			// save the teams
+			$this->_set_teams($member);
+
+			// save the weeks for this member
+			$this->_set_weeks($member);
+
 			// load the model
 			$this->loadModel("Member");
+
+			// make phone required if they select text
+			if(isset($member['alert_type_id']) && $member['alert_type_id'] === "2") array_push($this->Member->required, "phone");
 
 			// save the new Member
 			$this->Member->save($member);
@@ -256,6 +252,7 @@
 				// set the errors
 				$this->view_data("errors",$this->Member->error);
 			}
+
 		}
 
 		// if there is an id
@@ -333,5 +330,127 @@
 		// // redirect back to home page
 		Core::redirect("Team","Index");
 
+	}
+
+	private function _get_teams()
+	{
+		// load the team model
+		$this->loadModel("Team");
+
+		// on get this table
+		$this->Team->options['recursive'] = 0;
+
+		// only get the id and name
+		$this->Team->options['fields'] = array("Team"=>array("id","name"));
+
+		// get all of them
+		$team_names = $this->Team->findAll();
+
+		// set the teams for the view
+		$this->view_data("team_names",$team_names);
+
+	}
+
+	private function _set_teams($member)
+	{
+		// if there are teams
+		if(isset($member['teams']))
+		{
+			// get the team member controller
+			$team_member_controller = Core::instantiate("TeamMemberController");
+
+			if(isset($member['id']))
+			{
+				$teams = $team_member_controller->index($member['id']);
+
+				if($teams)
+				{
+					foreach($teams as $team)
+					{
+						if(($index = array_search($team['team_id'], $member['teams'])) !== false)
+						{
+							unset($member['teams'][$index]);
+
+						}
+						else
+						{
+							$team_member_controller->delete($team['id']);
+						}
+					}
+				}
+
+
+			}
+
+			// loop throught the teams selected
+			foreach($member['teams'] as $team_id)
+			{
+				// save each team member
+				$team_member_controller->post(array("team_id"=>$team_id,"member_id"=>$member['id'],"team_member_type_id"=>2));
+			}
+
+		}
+	}
+
+	private function _set_weeks($member)
+	{
+
+		// if there are teams
+		if(isset($member['weeks']))
+		{
+			// get the team member controller
+			$member_week_controller = Core::instantiate("MemberWeekController");
+
+			if(isset($member['id']))
+			{
+				$weeks = $member_week_controller->index($member['id']);
+
+				if($weeks)
+				{
+					foreach($weeks as $week)
+					{
+						if(($index = array_search($week['week_id'], $member['weeks'])) !== false)
+						{
+							unset($member['weeks'][$index]);
+
+						}
+						else
+						{
+							$member_week_controller->delete($week['id']);
+						}
+					}
+				}
+
+
+			}
+
+			// loop throught the teams selected
+			foreach($member['weeks'] as $week_id)
+			{
+				// save each team member
+				$member_week_controller->post(array("week_id"=>$week_id,"member_id"=>$member['id']));
+			}
+
+		}
+
+	}
+
+	private function _set_profile_pic(&$member)
+	{
+		// if there is a profile pic upload
+		if(isset($_FILES['profile_pic']) && !empty($_FILES['profile_pic']['name']))
+		{
+			$file_name = Asset::$paths['img']."profile_pics/pic-".time().".".pathinfo($_FILES['profile_pic']['name'])['extension'];
+			 move_uploaded_file($_FILES["profile_pic"]['tmp_name'], WEBROOT_PATH."/".$file_name);
+
+			 $member["profile_pic"] = Asset::relative_url().$file_name;
+
+		}
+		// if they didn't upload a new profile pic and there was already one set it
+		else if(!empty($member['facebook_pic']))
+		{
+			$member['profile_pic'] = $member['facebook_pic'];
+
+		}
 	}
 }

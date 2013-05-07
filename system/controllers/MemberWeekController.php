@@ -16,7 +16,7 @@
 	 * Get all the MemberWeeks
 	 * @return array all the MemberWeeks
 	 */
-	public function index()
+	public function index($id=NULL)
 	{
 
 		// load the model
@@ -25,8 +25,15 @@
 		// only get this table
 		$this->MemberWeek->options['recursive'] = 0;
 
-		// get all the MemberWeeks
-		$member_weeks = $this->MemberWeek->findAll();
+		if($id) {
+			// get all the TeamMembers for a member
+			$member_weeks = $this->MemberWeek->findByMemberId($id);
+		}
+
+		else {
+			// get all the TeamMembers
+			$member_weeks = $this->MemberWeek->findAll($id);
+		}
 
 		//set the success
 		$this->view_data('success',$this->MemberWeek->success);
@@ -134,10 +141,10 @@
 		// if there is an id
 		if($member_week_id)
 		{
-			
+
 			// get a MemberWeek
 			$this->get($member_week_id);
-			
+
 		}
 
 

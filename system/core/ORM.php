@@ -583,7 +583,7 @@ Class ORM extends Database {
 		$dbName = Core::to_db($this->_name);
 
 		// call the before delete function
-		if(Hook::call("before_delete",$id, $dbName, $this) === false) return;
+		if(Hook::call("before_delete",array($id, $dbName, &$this)) === false) return;
 
 		// create the delete statement
 		$statement = "DELETE FROM $dbName where id = :id";
