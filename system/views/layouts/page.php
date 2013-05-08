@@ -8,7 +8,15 @@
 </head>
 <body>
 	<header>
-		<?php if(Session::get('logged_in')):?><a href="<?php echo Asset::create_url("member","logout")?>" id="logout">Logout</a><?php endif;?>
+		<?php if(Session::get('logged_in')):?>
+		<div id="logout">
+			<a href="<?php echo Asset::create_url("member","update",array( Auth::user('id') ) )?>">Update my Settings</a> | <a href="<?php echo Asset::create_url("member","logout")?>">Logout</a>
+		</div>
+		<?php else:?>
+			<div id="logout">
+				<a href="<?php echo Asset::create_url("member","login")?>">Login</a>
+			</div>
+		<?php endif;?>
 		<?php echo Asset::img("logo.png")?>
 	</header>
 	<div class="nav_containter">
@@ -17,9 +25,11 @@
 
 				<a href="<?php echo Asset::create_url("team","index")?>#areas">Areas to Serve</a>
 				<a href="<?php echo Asset::create_url("date","index")?>">Current Schedule</a>
-				<?php if(Session::get('logged_in')):?><a href="<?php echo Asset::create_url("member","update",array( Auth::user('id') ) )?>">Update my Settings</a><?endif;?>
+				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+					<a href="<?php echo Asset::create_url('team','admin')?>">Teams</a>
+				<?php endif;?>
 			</nav>
-			<a href="<?php echo Asset::create_url("member","post")?>" class="button">I am interested in serving</a>
+			<?php if(!Session::get('logged_in')): ?><a href="<?php echo Asset::create_url("member","post")?>" class="button">I am interested in serving</a><?php endif;?>
 		</div>
 	</div>
 	<?php echo $content_for_layout?>

@@ -25,6 +25,8 @@ header {
   width: 100%;
   background-color: #666666;
   overflow: hidden; }
+  .nav_containter .row {
+    margin: 0 auto; }
   .nav_containter .button {
     display: block;
     padding: 0.5% 2%;
@@ -37,16 +39,17 @@ p {
 nav {
   float: left;
   margin-left: 2.5%;
-  width: 65%;
-  margin-top: 1.5%; }
+  width: 65%; }
   nav a {
     color: white;
     text-transform: uppercase;
     font-family: Oswald, Arial, sans-serif;
     text-decoration: none;
     letter-spacing: 2px;
-    margin-right: 6%;
-    font-weight: 300; }
+    font-weight: 300;
+    padding: 2.8% 2.5% 2.2%;
+    display: block;
+    float: left; }
 
 h1 {
   color: #44c99f;
@@ -70,8 +73,7 @@ h2 {
   text-transform: uppercase;
   letter-spacing: 3px;
   width: 90%;
-  margin: 0 auto;
-  margin-bottom: 2.5%; }
+  margin: 0 auto; }
 
 a {
   color: #44c99f;
@@ -106,7 +108,7 @@ footer {
   clear: both;
   overflow: hidden;
   max-width: 960px;
-  margin: 0 auto; }
+  margin: 10px auto; }
   .row .cols {
     margin-left: 2.5%;
     float: left;
@@ -195,7 +197,7 @@ footer {
 .table {
   display: table;
   width: 99%;
-  margin: 2.5% 0;
+  margin: 0;
   border-left: 1px solid #666666;
   border-bottom: 1px solid #666666; }
   .table .tooltip .bucket {
