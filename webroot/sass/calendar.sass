@@ -59,6 +59,10 @@
 		padding: 1%
 		width: 18%
 
+	.shift
+
+		margin-bottom: 20px
+
 	.time
 
 		font-weight: 700
@@ -106,3 +110,59 @@
 
 			vertical-align: middle
 			display: inline
+
+.team_date
+
+	position: relative
+
+.tooltip
+
+	position: relative
+	font-weight: bold
+
+	span
+
+		display: none
+		position: absolute
+		width: 50px
+		padding: 2px 5px
+		font-size: .75em
+		color: $gray
+		background-color: #ddd
+		bottom: -20px
+		left: 5px
+		border: 1px solid #ccc
+		z-index: 5
+		font-weight: normal
+
+	&:hover
+
+		span
+
+			display: block
+
+
+.new_shift
+
+	position: absolute
+	right: 5px
+	bottom: 5px
+
+
+.cancel
+
+	vertical-align: -1px
+	margin-left: 4px
+	color:  #C94456
+
+	span
+
+		width: 65px
+
+.remove
+
+	color:  #C94456
+
+	span
+
+		width: 75px

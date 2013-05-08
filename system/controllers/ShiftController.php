@@ -200,6 +200,8 @@
 			// return the success
 			$this->Shift->success;
 
+			header("Location: ".$_SERVER['HTTP_REFERER']);
+
 		}
 	}
 }

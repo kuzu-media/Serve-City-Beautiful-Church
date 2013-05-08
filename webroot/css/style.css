@@ -181,10 +181,6 @@ footer {
 .facebook {
   margin: 20px 0 10px; }
 
-.cancel {
-  vertical-align: -1px;
-  margin-left: 4px; }
-
 .arrow {
   display: block;
   height: 0;
@@ -227,6 +223,8 @@ footer {
     vertical-align: middle;
     padding: 1%;
     width: 18%; }
+  .table .shift {
+    margin-bottom: 20px; }
   .table .time {
     font-weight: 700; }
   .table .title {
@@ -254,6 +252,45 @@ footer {
   .table .update img {
     vertical-align: middle;
     display: inline; }
+
+.team_date {
+  position: relative; }
+
+.tooltip {
+  position: relative;
+  font-weight: bold; }
+  .tooltip span {
+    display: none;
+    position: absolute;
+    width: 50px;
+    padding: 2px 5px;
+    font-size: 0.75em;
+    color: #383838;
+    background-color: #dddddd;
+    bottom: -20px;
+    left: 5px;
+    border: 1px solid #cccccc;
+    z-index: 5;
+    font-weight: normal; }
+  .tooltip:hover span {
+    display: block; }
+
+.new_shift {
+  position: absolute;
+  right: 5px;
+  bottom: 5px; }
+
+.cancel {
+  vertical-align: -1px;
+  margin-left: 4px;
+  color: #c94456; }
+  .cancel span {
+    width: 65px; }
+
+.remove {
+  color: #c94456; }
+  .remove span {
+    width: 75px; }
 
 .modal {
   display: none;

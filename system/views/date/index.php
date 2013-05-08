@@ -30,11 +30,13 @@
 					<h3><a href="<?php echo  Asset::create_url("team","get",array($team['id']))?>"><?php echo $team['name']?></a></h3>
 				</div>
 				<?php foreach($dates as $date):?>
-					<div class="cols col-3">
+					<div class="cols col-3 team_date">
 					<?php $shift_count = 0; if($date['Shift']): foreach($date['Shift'] as $shift) :?>
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
-								<p class="time"><?php echo $shift['time']?></p>
+								<p class="time"><?php echo $shift['time']?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+							<a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Shift</span></a>
+						<?php endif;?></p>
 								<?php $serving = false;?>
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
@@ -59,7 +61,7 @@
 									<?php echo $opening_tag ?>
 
 										<img src="<?php echo $member['Member']['profile_pic']?>" />
-										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">X</a><?php endif;?></p>
+										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel tooltip' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">x<span>Cancel Shift</span></a><?php endif;?></p>
 									<?php echo $closing_tag ?>
 								<?php endforeach; endif;?>
 
@@ -69,7 +71,7 @@
 
 					<?php endforeach; endif;?>
 						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
-							<a class='new_shift' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">New Shift</a>
+							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Shift</span></a>
 						<?php endif;?>
 					</div>
 				<?php endforeach; ?>
@@ -102,7 +104,7 @@ jQuery(document).ready(function($) {
 					var img = $("<img />").attr("src",data.member.profile_pic);
 					var name = $("<p>").text(data.member.name);
 					var link = "<?php echo Asset::create_url('ShiftMember','delete') ?>/"+data.shift_member_id;
-					name.append("<a href='"+link+"' class='cancel'>X</a>");
+					name.append("<a href='"+link+"' class='cancel tooltip'>x<span>Cancel Shift</span></a>");
 					var div = $("<div>").addClass("name").append(img).append(name);
 
 					button.replaceWith(div);
