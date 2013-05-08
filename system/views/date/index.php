@@ -39,7 +39,13 @@
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
 									<?php
-										if($member['Member']['facebook_id'])
+										$current = false;
+										if($logged_in && $member['Member']['id'] === Auth::user('id'))
+										{
+											$serving = true;
+											$current= true;
+										}
+										if($member['Member']['facebook_id'] && !$current)
 										{
 											$opening_tag = "<a href='http://facebook.com/".$member['Member']['facebook_id']."' class='name'>";
 											$closing_tag = "</a>";
@@ -51,9 +57,9 @@
 										}
 									?>
 									<?php echo $opening_tag ?>
-										<?php if($logged_in && $member['Member']['id'] === Auth::user('id')) $serving = true;?>
+
 										<img src="<?php echo $member['Member']['profile_pic']?>" />
-										<p><?php echo $member['Member']['name'];?></p>
+										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">X</a><?php endif;?></p>
 									<?php echo $closing_tag ?>
 								<?php endforeach; endif;?>
 								<?php if(!$serving):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
@@ -90,15 +96,11 @@ jQuery(document).ready(function($) {
 				success: function (data) {
 					var img = $("<img />").attr("src",data.member.profile_pic);
 					var name = $("<p>").text(data.member.name);
-					if(data.member.facebook_id)
-					{
-						var a = $("<a>").addClass("name").attr("href","http://facebook.com/"+data.member.facebook_id).append(img).append(name)
-					}
-					else
-					{
-						var a = $("<div>").addClass("name").append(img).append(name);
-					}
-					button.replaceWith(a);
+					var link = "<?php echo Asset::create_url('ShiftMember','delete') ?>/"+data.shift_member_id;
+					name.append("<a href='"+link+"' class='cancel'>X</a>");
+					var div = $("<div>").addClass("name").append(img).append(name);
+
+					button.replaceWith(div);
 				}
 			});
 		}

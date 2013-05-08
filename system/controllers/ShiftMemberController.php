@@ -142,8 +142,9 @@
 						"Member"=>array("id","phone"),
 						"TeamMember"=>array("id","team_id","member_id","team_member_type_id")
 					);
+					$this->TeamMember->options['WHERE'] = array("TeamMember.team_member_type_id in (1,4)");
 
-					$shepherds = $this->TeamMember->findByTeamIdAndTeamMemberTypeId($shift['Shift']['team_id'],1);
+					$shepherds = $this->TeamMember->findByTeamId($shift['Shift']['team_id']);
 
 					// if we have a member and at least on shepherd
 					if($member && $shepherds)
@@ -170,7 +171,7 @@
 			}
 
 			// save the new ShiftMember
-			$this->ShiftMember->save($shift_member);
+			$shift_id = $this->ShiftMember->save($shift_member);
 
 			// set the success
 			$this->view_data("success",$this->ShiftMember->success);
@@ -180,6 +181,8 @@
 
 			// set the errors
 			if(!$this->ShiftMember->success) $this->view_data("errors",$this->ShiftMember->error);
+
+			$this->view_data("shift_member_id",$shift_id);
 
 			// return the success
 			return $this->ShiftMember->success;
@@ -231,6 +234,7 @@
 	 */
 	public function delete($shift_member_id=NULL)
 	{
+
 		// if there was an id sent
 		if($shift_member_id)
 		{
@@ -246,6 +250,8 @@
 
 			// return the success
 			$this->ShiftMember->success;
+
+			header("Location: ".$_SERVER['HTTP_REFERER']);
 
 		}
 	}

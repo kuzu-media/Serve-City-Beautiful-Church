@@ -38,10 +38,10 @@
 					<div class='cols'><?php echo $team_member['Member']['phone'] ?></div>
 					<div class='cols'>
 						<select id="update-<?php echo $team_member['TeamMember']['id']?>" data-team-member-id="<?php echo $team_member['TeamMember']['id']?>" data-member-id="<?php echo $team_member['Member']['id']?>">
-							<option data-member-type-id="1" data-team-member-type-id="1" <?php if($team_member['Member']['member_type_id'] === "1")echo "selected"?>>Team Leader</option>
-							<option data-member-type-id="2" data-team-member-type-id="1" <?php if($team_member['Member']['member_type_id'] !== "1" && $team_member['TeamMemberType']['id'] === "1") echo "selected" ?>>Shepherd</option>
-							<option data-member-type-id="2" data-team-member-type-id="2" <?php if($team_member['Member']['member_type_id'] !== "1" && $team_member['TeamMemberType']['id'] === "2") echo "selected" ?>>Sever</option>
-							<option data-member-type-id="<?php echo $team_member['Member']['member_type_id']?>" data-team-member-type-id="3" <?php if($team_member['TeamMemberType']['id'] === "3") echo "selected" ?>>Archive</option>
+							<option data-member-type-id="1" data-team-member-type-id="4" <?php if( $team_member['TeamMemberType']['id'] === "4")echo "selected"?>>Team Leader</option>
+							<option data-team-member-type-id="1" <?php if($team_member['TeamMemberType']['id'] === "1") echo "selected" ?>>Shepherd</option>
+							<option data-team-member-type-id="2" <?php if($team_member['TeamMemberType']['id'] === "2") echo "selected" ?>>Sever</option>
+							<option data-team-member-type-id="3" <?php if($team_member['TeamMemberType']['id'] === "3") echo "selected" ?>>Archive</option>
 						</select>
 						<a href="#update-<?php echo $team_member['TeamMember']['id']?>" class="update"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
 					</div>
@@ -61,11 +61,12 @@
 		var select = $(link.attr('href'));
 		var selected = select.find(":selected");
 
-		console.log('<?php echo Asset::relative_url() ?>'+selected.data("update-type")+"/update/"+selected.data("update-id"))
 		var data = {id:selected.data("update-id")}
 		data[selected.data("update")] = selected.val();
 
-		$.ajax({
+		if(selected.data("team-member-type-id") === "4")
+		{
+			$.ajax({
 				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id")+".json",
 				type: 'post',
 				data: {
@@ -76,6 +77,8 @@
 					data
 				}
 			});
+		}
+
 
 		$.ajax({
 				url: '<?php echo Asset::relative_url() ?>'+"teamMember/update/"+select.data("team-member-id")+".json",

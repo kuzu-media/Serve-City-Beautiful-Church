@@ -180,6 +180,10 @@ footer {
 .facebook {
   margin: 20px 0 10px; }
 
+.cancel {
+  vertical-align: -1px;
+  margin-left: 4px; }
+
 .arrow {
   display: block;
   height: 0;
