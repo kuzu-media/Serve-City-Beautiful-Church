@@ -255,4 +255,43 @@
 
 		}
 	}
+
+	public function availability($team_id,$date_id)
+	{
+		// get the servers for that date
+		$this->loadModel("ShiftMember");
+		$this->ShiftMember->options['recursive'] = 1;
+		$this->ShiftMember->belongsTo = array("Shift");
+		$this->ShiftMember->options['fields'] = array("ShiftMember"=>array("id","member_id"),"Shift"=>array());
+		$this->ShiftMember->options['where'] = array("date_id"=>array($date_id,"Shift"));
+		$servers = $this->ShiftMember->findAll();
+
+		// createa  string for the not in
+		$not = "";
+
+		if($servers)
+		{
+			foreach($servers as $member)
+			{
+				$not .= $member['ShiftMember']['member_id'].", ";
+			}
+
+			$not = substr($not, 0,-2);
+
+		}
+
+		// get all the members that aren't already serving that day
+		$this->loadModel("Member");
+		$this->Member->options['recursive'] = 2;
+		$this->Member->hasMany = array("TeamMember");
+		$this->Member->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),"TeamMember"=>array());
+		$this->Member->options['where'] = array("team_id"=>array($team_id,"TeamMember"), "Member.id NOT IN (".$not.")");
+		$members = $this->Member->findAll();
+
+
+		$this->view_data("success",$this->Member->success);
+
+		if($this->Member->success) $this->view_data("members",$members);
+
+	}
 }

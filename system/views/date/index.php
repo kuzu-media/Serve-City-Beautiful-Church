@@ -72,6 +72,7 @@
 					<?php endforeach; endif;?>
 						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
 							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Shift</span></a>
+							<a class='check_availability tooltip' href="<?php echo Asset::create_url('ShiftMember','availability',array($team['id'],$date['id']))?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
 						<?php endif;?>
 					</div>
 				<?php endforeach; ?>
@@ -129,6 +130,21 @@ jQuery(document).ready(function($) {
 			})
 
 		}
+	});
+
+	$(".check_availability").on('click',function(e)
+	{
+			e.preventDefault();
+			var button = $(this);
+			$.ajax({
+					url: button.attr('href'),
+					type: 'get',
+					success: function (data) {
+						var modal = $(data);
+						modal.find("h1").text("Members Available on "+button.data("date-date")+" for "+ button.data("team-name"));
+						modal.appendTo("body").modal();
+					}
+				});
 	});
 
 	<?php if($first):?>

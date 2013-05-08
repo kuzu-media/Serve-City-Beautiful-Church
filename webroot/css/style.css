@@ -280,6 +280,13 @@ footer {
   right: 5px;
   bottom: 5px; }
 
+.check_availability {
+  position: absolute;
+  right: 5px;
+  top: 5px; }
+  .check_availability span {
+    width: 100px; }
+
 .cancel {
   vertical-align: -1px;
   margin-left: 4px;
@@ -340,6 +347,12 @@ footer {
   -o-border-radius: 8px;
   -ms-border-radius: 8px;
   border-radius: 8px; }
+
+#availability {
+  max-width: 800px; }
+  #availability .table p {
+    margin: 0;
+    padding: 0; }
 
 #register .facebook img, #login .facebook img {
   margin: 0; }
