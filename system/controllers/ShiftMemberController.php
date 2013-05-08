@@ -266,11 +266,11 @@
 		$this->ShiftMember->options['where'] = array("date_id"=>array($date_id,"Shift"));
 		$servers = $this->ShiftMember->findAll();
 
-		// createa  string for the not in
-		$not = "";
 
 		if($servers)
 		{
+			// string for not in
+			$not = "";
 			foreach($servers as $member)
 			{
 				$not .= $member['ShiftMember']['member_id'].", ";
@@ -279,6 +279,12 @@
 			$not = substr($not, 0,-2);
 
 		}
+		else
+		{
+			// set emtyp string for not in
+			$not = "''";
+		}
+
 
 		// get all the members that aren't already serving that day
 		$this->loadModel("Member");
