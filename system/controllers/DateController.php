@@ -45,8 +45,7 @@
 		// load the model
 		$this->loadModel("Date");
 
-		$this->Date->options['orderBy'] = array("Shift","team_id");
-		$this->Date->options['key'] = array("Shift"=>"id");
+		$this->Date->options['recursive'] = 0;
 		$this->Date->options['limit'] = array(0,5);
 
 		$week1 = strtotime('next sunday +'.(0 + ($page * 28)).' Days');
@@ -67,18 +66,27 @@
 		if($this->Date->success)
 		{
 
-			// get the shift member controller
+
+			$this->loadModel("Shift");
 			$shift_member_controller = Core::instantiate("ShiftMemberController");
 
 			// loop through the dates
 			foreach($dates as &$date)
 			{
-				// foreach sift
-				foreach($date['Shift'] as $shift_id=>&$shift)
+				$this->Shift->options['recursive'] = 0;
+				$this->Shift->options['orderBy'] = array("Shift","team_id","ASC");
+				$date['Shift'] = $this->Shift->findByDateId($date['id']);
+
+				if($date['Shift'])
 				{
-					// get the members
-					$shift['members'] = $shift_member_controller->get($shift_id);
+					// foreach shift
+					foreach($date['Shift'] as &$shift)
+					{
+						// get the members
+						$shift['members'] = $shift_member_controller->get($shift['id']);
+					}
 				}
+
 			}
 
 			// get the team controller

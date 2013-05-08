@@ -4,10 +4,10 @@
 			<div class="cols col-3 title">
 				<h2>Areas</h2>
 			</div>
-			<?php $last = count($dates) - 1; $empty_notes = true; foreach($dates as $index=>$date): if(!empty($date['Date']['notes'])) $empty_notes = false;?>
+			<?php $last = count($dates) - 1; $empty_notes = true; foreach($dates as $index=>$date): if(!empty($date['notes'])) $empty_notes = false;?>
 			<div class='cols col-3 title'>
 
-				<h2><?php if($index === 0 && strtotime($date['Date']['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['Date']['date'] ?><?php if($index ===  $last && strtotime($date['Date']['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
+				<h2><?php if($index === 0 && strtotime($date['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['date'] ?><?php if($index ===  $last && strtotime($date['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
 
 			</div>
 			<?php endforeach;?>
@@ -19,7 +19,7 @@
 			<?php foreach($dates as $date):?>
 			<div class="cols col-3 note">
 
-				<?php echo $date['Date']['notes'] ?>
+				<?php echo $date['notes'] ?>
 			</div>
 			<?php endforeach; ?>
 		</div>
@@ -31,7 +31,7 @@
 				</div>
 				<?php foreach($dates as $date):?>
 					<div class="cols col-3">
-					<?php $shift_count = 0; foreach($date['Shift'] as $shift) :?>
+					<?php $shift_count = 0; if($date['Shift']): foreach($date['Shift'] as $shift) :?>
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
 								<p class="time"><?php echo $shift['time']?></p>
@@ -62,10 +62,15 @@
 										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">X</a><?php endif;?></p>
 									<?php echo $closing_tag ?>
 								<?php endforeach; endif;?>
+
 								<?php if(!$serving):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
 							</div>
 						<?php $shift_count++ ;endif?>
-					<?php endforeach;?>
+
+					<?php endforeach; endif;?>
+						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+							<a class='new_shift' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">New Shift</a>
+						<?php endif;?>
 					</div>
 				<?php endforeach; ?>
 			</div>
@@ -127,6 +132,20 @@ jQuery(document).ready(function($) {
 	<?php if($first):?>
 		$("#first").modal();
 	<?php endif;?>
+
+	$(".new_shift").on('click',function(e)
+	{
+		e.preventDefault();
+
+		var shift_info = $(this).data();
+		var modal =$("#new_shift");
+		modal.find("h1").text("New Shift for "+shift_info.teamName+" on "+shift_info.dateDate)
+		modal.find("#date_id").val(shift_info.dateId);
+		modal.find("#team_id").val(shift_info.teamId);
+
+		modal.modal();
+
+	});
 });
 </script>
 <?php if($first):?>
@@ -139,6 +158,23 @@ jQuery(document).ready(function($) {
 </div>
 <?php endif;?>
 
+<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+<div class="modal" id="new_shift">
+	<a href="#close" class="close-modal">Close</a>
+	<h1></h1>
+
+	<form  method='POST' action='<?php echo Asset::create_url('shift','post')?>'>
+		<input type="hidden" name="date_id" id="date_id" />
+		<input type="hidden" name="team_id" id="team_id" />
+		<div>
+			<label for='time'>Time:</label>
+			<input type='text' id='time' name='time' value='<?php if(isset($time)) echo $time; ?>' placeholder="ex. 5:45 pm" />
+		</div>
+		<input type='submit' value='save' class="button" />
+	</form>
+
+</div>
+<?php endif;?>
 <div class="modal" id="login">
 	<a href="#close" class="close-modal">Close</a>
 	<div class="row">

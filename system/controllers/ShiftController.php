@@ -132,6 +132,8 @@
 			$this->view_data("success",$this->Shift->success);
 			if(!$this->Shift->success) return $this->view_data("errors",$this->Shift->error);
 
+			if($this->Shift->success) header("Location: ".$_SERVER['HTTP_REFERER']);
+
 			// return the success
 			return $this->Shift->success;
 		}
