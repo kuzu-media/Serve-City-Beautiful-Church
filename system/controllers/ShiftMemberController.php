@@ -281,7 +281,7 @@
 		}
 		else
 		{
-			// set emtyp string for not in
+			// set emtpy string for not in
 			$not = "''";
 		}
 
@@ -290,14 +290,50 @@
 		$this->loadModel("Member");
 		$this->Member->options['recursive'] = 2;
 		$this->Member->hasMany = array("TeamMember");
-		$this->Member->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),"TeamMember"=>array());
-		$this->Member->options['where'] = array("team_id"=>array($team_id,"TeamMember"), "Member.id NOT IN (".$not.")");
+		$this->Member->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"));
+		$this->Member->options['where'] = array("team_id"=>array($team_id,"TeamMember"), "Member.id NOT IN (".$not.")","TeamMember.team_member_type_id != 3");
 		$members = $this->Member->findAll();
 
-
+		if($this->Member->success) $this->view_data("members",$members);
 		$this->view_data("success",$this->Member->success);
 
-		if($this->Member->success) $this->view_data("members",$members);
+		// get all the member that are serving and when
+		$this->Member->options['recursive'] = 2;
+		$this->Member->hasMany = array("TeamMember","ShiftMember");
+		$this->Member->options['joins'] = array(array("ShiftMember","Shift"),array("Shift","Team"));
+		$this->Member->options['fields'] = array(
+													"Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),
+													"Shift"=>array("id","time","team_id")
+												);
+		$this->Member->options['where'] = array("team_id"=>array($team_id,"TeamMember"), "Member.id IN (".$not.")","TeamMember.team_member_type_id != 3","date_id"=>array($date_id,"Shift"));
+		$working_members = $this->Member->findAll();
+
+
+		if($this->Member->success)
+		{
+			$this->view_data("working_members",$working_members);
+
+			// load the team model
+			$this->loadModel("Team");
+			// on get this table
+			$this->Team->options['recursive'] = 0;
+			// only get the id and name
+			$this->Team->options['fields'] = array("Team"=>array("id","name"));
+			// get all of them
+			$team_names = $this->Team->findAll();
+			// set the teams for the view
+			$this->view_data("team_names",$team_names);
+
+		}
+
+		// get the archived members
+		$this->Member->options['recursive'] = 2;
+		$this->Member->hasMany = array("TeamMember");
+		$this->Member->options['where'] = array("team_id"=>array($team_id,"TeamMember"), "Member.id NOT IN (".$not.")","TeamMember.team_member_type_id = 3");
+		$achived_members = $this->Member->findAll();
+
+
+		if($this->Member->success) $this->view_data("achived_members",$achived_members);
 
 	}
 }

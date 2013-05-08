@@ -141,7 +141,7 @@ jQuery(document).ready(function($) {
 					type: 'get',
 					success: function (data) {
 						var modal = $(data);
-						modal.find("h1").text("Members Available on "+button.data("date-date")+" for "+ button.data("team-name"));
+						modal.find("h1:first").text("Members Available on "+button.data("date-date")+" for "+ button.data("team-name"));
 						modal.appendTo("body").modal();
 					}
 				});
