@@ -18,11 +18,17 @@
 	 * Get all the Dates
 	 * @return array all the Dates
 	 */
-	public function index($first=NULL)
+	public function index($page=NULL)
 	{
 
 		// if this is the first time they came to this page
+		$first = $page === "group"?true:NULL;
 		$this->view_data("first",$first);
+
+		if($page === "group" || !$page) $page = 0;
+		else $page = intval($page);
+
+		$this->view_data("page",$page);
 
 		// set up the facebook controller
 		$facebook = Core::instantiate("FacebookAPIController");
@@ -41,6 +47,15 @@
 
 		$this->Date->options['orderBy'] = array("Shift","team_id");
 		$this->Date->options['key'] = array("Shift"=>"id");
+		$this->Date->options['limit'] = array(0,5);
+
+		$week1 = strtotime('next sunday +'.(0 + ($page * 28)).' Days');
+		$week2 = strtotime('next sunday +'.(7 + ($page * 28)).' Days');
+		$week3 = strtotime('next sunday +'.(14 + ($page * 28)).' Days');
+		$week4 = strtotime('next sunday +'.(21+ ($page * 28)).' Days');
+
+
+		$this->Date->options['where'] = array("Date.date IN ('".Date('m/d/y',$week1)."','".Date('m/d/y',$week2)."','".Date('m/d/y',$week3)."','".Date('m/d/y',$week4)."')");
 
 		// get all the Dates
 		$dates = $this->Date->findAll();

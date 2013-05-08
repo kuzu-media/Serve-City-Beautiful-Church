@@ -4,20 +4,26 @@
 			<div class="cols col-3 title">
 				<h2>Areas</h2>
 			</div>
-			<?php foreach($dates as $date):?>
+			<?php $last = count($dates) - 1; $empty_notes = true; foreach($dates as $index=>$date): if(!empty($date['Date']['notes'])) $empty_notes = false;?>
 			<div class='cols col-3 title'>
-				<h2><?php echo $date['Date']['date'] ?></h2>
+
+				<h2><?php if($index === 0 && strtotime($date['Date']['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['Date']['date'] ?><?php if($index ===  $last && strtotime($date['Date']['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
+
 			</div>
 			<?php endforeach;?>
 		</div>
+		<?php if(!$empty_notes): ?>
 		<div class="row">
 			<div class="cols col-3"></div>
+
 			<?php foreach($dates as $date):?>
 			<div class="cols col-3 note">
+
 				<?php echo $date['Date']['notes'] ?>
 			</div>
-			<?php endforeach;?>
+			<?php endforeach; ?>
 		</div>
+		<?php endif;?>
 		<?php foreach($teams as $team):?>
 			<div class="row">
 				<div class="cols col-3 team">

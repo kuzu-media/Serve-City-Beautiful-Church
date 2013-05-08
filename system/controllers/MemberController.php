@@ -195,7 +195,7 @@
 				}
 
 				// go back to the calender
-				Core::redirect("date","index",array("1"));
+				Core::redirect("date","index",array("group"));
 
 				// return the success
 				return $this->Member->success;
