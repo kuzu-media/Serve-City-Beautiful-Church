@@ -12,6 +12,23 @@
  */
  Class ShiftController extends Controller
 {
+
+	public function before_action()
+	{
+
+		parent::before_action();
+
+		$url = Core::$info_of_url;
+
+		// if the user isn't an admin they can't see the admin action
+		if(Auth::user("member_type_id") !== "1" && Core::$info_of_url['action'] === "post")
+		{
+
+			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);
+
+		}
+	}
+
 	/**
 	 * Get all the Shifts
 	 * @return array all the Shifts
@@ -88,6 +105,20 @@
 	 */
 	public function post($shift=NULL)
 	{
+
+		$this->loadModel("Team");
+		$this->Team->options['recursive'] = 0;
+		$this->Team->options['fields'] = array("Team"=>array("id","name"));
+		$teams = $this->Team->findAll();
+		$this->view_data("teams",$teams);
+
+		$this->loadModel("Date");
+		$this->Date->options['recursive'] = 0;
+		$this->Date->options['fields'] = array("Date"=>array("id","date"));
+		$this->Date->options['where'] = array("Date.date > '".Date("m/d/y",strtotime("last sunday"))."'");
+		$dates = $this->Date->findAll();
+		$this->view_data("dates",$dates);
+
 		//if information was sent
 		if($shift)
 		{

@@ -27,6 +27,7 @@
 				<a href="<?php echo Asset::create_url("date","index")?>">Current Schedule</a>
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
 					<a href="<?php echo Asset::create_url('team','admin')?>">Teams</a>
+					<a href="<?php echo Asset::create_url('shift','post')?>">New Shift</a>
 				<?php endif;?>
 			</nav>
 			<?php if(!Session::get('logged_in')): ?><a href="<?php echo Asset::create_url("member","post")?>" class="button">I am interested in serving</a><?php endif;?>
