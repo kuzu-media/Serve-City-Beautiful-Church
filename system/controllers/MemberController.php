@@ -367,8 +367,16 @@
 		// log the user out
 		Auth::logout();
 
-		// // redirect back to home page
-		Core::redirect("Team","Index");
+		// set up the facebook controller
+		$facebook = Core::instantiate("FacebookAPIController");
+
+		$redirect_uri = Asset::create_url("Team","index");
+
+		$params = array( 'next' => $redirect_uri);
+
+		$url = $facebook->getLogoutUrl($params); // $params is optional.
+
+		header("Location: ".$url);
 
 	}
 
