@@ -1,5 +1,11 @@
 <div class="row">
 	<div class="cols bucket">
+		<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+			<div class="utility">
+				<a href="<?php echo Asset::create_url('team',"update",array($team['id']))?>">Edit Team</a> |
+				<a href="<?php echo Asset::create_url('testimonial',"post",array($team['id']))?>">Add Testimonial</a>
+			</div>
+		<?php endif;?>
 		<h1><?php echo $team['name']?></h1>
 		<iframe width="560" height="315" src="<?php echo $team['video']?>" frameborder="0" allowfullscreen></iframe>
 		<p><?php echo $team['content']?></p>

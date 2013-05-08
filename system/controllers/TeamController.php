@@ -24,7 +24,7 @@
 		$url = Core::$info_of_url;
 
 		// if the user isn't an admin they can't see the admin action
-		if(Auth::user("member_type_id") !== "1" && Core::$info_of_url['action'] === "admin")
+		if(Auth::user("member_type_id") !== "1" && (Core::$info_of_url['action'] === "admin" || Core::$info_of_url['action'] === 'update'))
 		{
 
 			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);
@@ -139,6 +139,26 @@
 		// if information was sent
 		if($team)
 		{
+			// set the team id
+			$team['id'] = $team_id;
+
+
+			// if there is a profile pic upload
+			if(isset($_FILES['photo']) && !empty($_FILES['photo']['name']))
+			{
+				$extension = pathinfo($_FILES['photo']['name']);
+				$file_name = "team_pics/pic-".time().".".$extension['extension'];
+				move_uploaded_file($_FILES["photo"]['tmp_name'], WEBROOT_PATH."/".Asset::$paths['img'].$file_name);
+
+				$team["photo"] = $file_name;
+
+			}
+			// if they didn't upload a new profile pic and there was already one set it
+			else
+			{
+				unset($team['photo']);
+
+			}
 			// load the model
 			$this->loadModel("Team");
 
@@ -153,6 +173,7 @@
 			{
 				// set the errors
 				$this->view_data("errors",$this->Team->error);
+
 			}
 		}
 

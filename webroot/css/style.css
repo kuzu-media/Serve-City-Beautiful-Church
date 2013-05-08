@@ -16,7 +16,7 @@ header {
   padding: 30px 0;
   text-align: center; }
 
-#logout {
+.utility {
   position: absolute;
   top: 10px;
   right: 20px; }
@@ -138,7 +138,8 @@ footer {
     padding: 2.5%;
     width: 90%;
     margin-bottom: 2.5%;
-    margin-top: 2.5%; }
+    margin-top: 2.5%;
+    position: relative; }
     .row .bucket h3 {
       color: #383838;
       font-family: Oswald, Arial, sans-serif;
@@ -334,22 +335,22 @@ form #profile {
   float: left;
   clear: both;
   margin: 7px; }
-form input {
+form input, form textarea {
   float: left;
   clear: both;
   margin: 7px; }
-  form input[type="text"], form input[type="password"] {
-    width: 45%;
-    -moz-box-shadow: 0px 0px 2px #44c99f;
-    -webkit-box-shadow: 0px 0px 2px 0px #44c99f;
-    box-shadow: 0px 0px 2px 0px #44c99f;
-    border: 1px solid #44c99f;
-    font-size: 14px;
-    font-size: 1.4rem;
-    line-height: 21px;
-    line-height: 1.5em;
-    border: none;
-    outline: none; }
+form input[type="text"], form input[type="password"], form textarea {
+  width: 45%;
+  -moz-box-shadow: 0px 0px 2px #44c99f;
+  -webkit-box-shadow: 0px 0px 2px 0px #44c99f;
+  box-shadow: 0px 0px 2px 0px #44c99f;
+  border: 1px solid #44c99f;
+  font-size: 14px;
+  font-size: 1.4rem;
+  line-height: 21px;
+  line-height: 1.5em;
+  border: none;
+  outline: none; }
 form select {
   float: left;
   clear: both;
@@ -359,5 +360,9 @@ form label {
   float: left;
   margin: 3px;
   clear: both; }
+  form label em {
+    font-size: 0.75em;
+    color: #666666;
+    display: block; }
   form label.check_label {
     clear: none; }

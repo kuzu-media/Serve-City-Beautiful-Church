@@ -44,22 +44,22 @@ form
 		clear: both
 		margin: 7px
 
-	input
+	input, textarea
 
 		float: left
 		clear: both
 		margin: 7px
 
-		&[type="text"], &[type="password"]
+	input[type="text"], input[type="password"], textarea
 
-			width: 45%
-			-moz-box-shadow: 0px 0px 2px $green
-			-webkit-box-shadow: 0px 0px 2px 0px $green
-			box-shadow: 0px 0px 2px 0px $green
-			border: 1px solid $green
-			+font-size(14,1.5)
-			border: none
-			outline: none
+		width: 45%
+		-moz-box-shadow: 0px 0px 2px $green
+		-webkit-box-shadow: 0px 0px 2px 0px $green
+		box-shadow: 0px 0px 2px 0px $green
+		border: 1px solid $green
+		+font-size(14,1.5)
+		border: none
+		outline: none
 	select
 
 		float: left
@@ -72,6 +72,12 @@ form
 		float: left
 		margin: 3px
 		clear: both
+
+		em
+
+			font-size: .75em
+			color: $light-gray
+			display: block
 
 		&.check_label
 
