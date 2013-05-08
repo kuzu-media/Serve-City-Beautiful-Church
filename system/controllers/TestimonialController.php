@@ -91,11 +91,38 @@
 	 * @param  array $testimonial all the information to save
 	 * @return boolean if it was successfull
 	 */
-	public function post($testimonial=NULL)
+	public function post($team_id=NULL, $testimonial=NULL)
 	{
+		if(is_array($team_id))
+		{
+			$testimonial = $team_id;
+			$team_id = NULL;
+		}
+		$this->view_data('team_id',$team_id);
+
 		//if information was sent
 		if($testimonial)
 		{
+			// set the team id
+			$testimonial['team_id'] = $team_id;
+
+			// if there is a profile pic upload
+			if(isset($_FILES['photo']) && !empty($_FILES['photo']['name']))
+			{
+				$extension = pathinfo($_FILES['photo']['name']);
+				$file_name = "testimonial_pics/pic-".time().".".$extension['extension'];
+				move_uploaded_file($_FILES["photo"]['tmp_name'], WEBROOT_PATH."/".Asset::$paths['img'].$file_name);
+
+				$testimonial["photo"] = $file_name;
+
+			}
+			// if they didn't upload a new profile pic and there was already one set it
+			else
+			{
+				unset($testimonial['photo']);
+
+			}
+
 			// load the model
 			$this->loadModel("Testimonial");
 
@@ -106,6 +133,8 @@
 			$this->view_data("success",$this->Testimonial->success);
 			if(!$this->Testimonial->success) return $this->view_data("errors",$this->Testimonial->error);
 
+
+			if($this->Testimonial->success) Core::redirect("team","get",array($team_id));
 			// return the success
 			return $this->Testimonial->success;
 		}
