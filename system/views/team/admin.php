@@ -17,7 +17,7 @@
 				<div class="cols title"><h2>email</h2></div>
 				<div class="cols title"><h2>phone</h2></div>
 				<div class="cols title">
-					<div class="tooltip">
+					<div class="tooltip status">
 						<h2>Status <?php echo Asset::img("info.png",array("class"=>"info"))?></h2>
 						<div class="bucket">
 							<h3>Team Leader</h3>

@@ -7,7 +7,7 @@
 			<p class="success"><strong>Success!</strong> Your settings have been updated.</p>
 		<?php endif;?>
 		<h1>Welcome<?php if(isset($first_name)):?>, <?php echo $first_name ?><?php endif;?>!</h1>
-		<p class="welcome">Please fill out your settings.</p>
+		<p class="welcome row">Thank you for choosing to serve our community. Please sign in or join so we can know more about you and your preferences.</p>
 		<?php if(!isset($facebook_id) || !$facebook_id):?>
 			<div class="facebook"><a href="<?php echo $login_url ?>"><?php echo Asset::img('register.png') ?></a></div>
 		<?php endif;?>
