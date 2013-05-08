@@ -34,23 +34,28 @@ Class FacebookController extends Controller
 				if($member)
 				{
 
+
 					// set the session user
 					Session::set('user',$member[0]);
 
 					// set that the user is logged in
 					Session::set('logged_in',true);
 
-					// get the shift member controller
-					$shift_member_controller = Core::instantiate("ShiftMemberController");
+					if($shift_id !== -1)
+					{
+						// get the shift member controller
+						$shift_member_controller = Core::instantiate("ShiftMemberController");
 
-					// create the shift member
-					$shift_member = array(
-						"shift_id"=>$shift_id,
-						"member_id"=>$member[0]['id']
-					);
+						// create the shift member
+						$shift_member = array(
+							"shift_id"=>$shift_id,
+							"member_id"=>$member[0]['id']
+						);
 
-					// save the shift member
-					$shift_member_controller->post($shift_member);
+						// save the shift member
+						$shift_member_controller->post($shift_member);
+					}
+
 
 					Core::redirect("date","index");
 

@@ -311,25 +311,34 @@
 		}
 	}
 
-	public function login($shift_id, $user=NULL)
+	public function login($shift_id=NULL, $user=NULL)
 	{
+
+		if(is_array($shift_id))
+		{
+			$user = $shift_id;
+			$shift_id = NULL;
+		}
 		if($user)
 		{
 
 			if(Auth::login($user))
 			{
-				// get the shift member controller
-				$shift_member_controller = Core::instantiate("ShiftMemberController");
+				if($shift_id)
+				{
+					// get the shift member controller
+					$shift_member_controller = Core::instantiate("ShiftMemberController");
 
-				// create the shift member
-				$shift_member = array(
-						"shift_id"=>$shift_id,
-						"member_id"=>Auth::user('id')
-					);
+					// create the shift member
+					$shift_member = array(
+							"shift_id"=>$shift_id,
+							"member_id"=>Auth::user('id')
+						);
 
-				// save the shift member
-				$shift_member_controller->post($shift_member);
+					// save the shift member
+					$shift_member_controller->post($shift_member);
 
+				}
 
 				Core::redirect("date","index");
 			}
@@ -340,6 +349,18 @@
 				$this->view_data("errors","Email or Password is incorrect");
 			}
 		}
+
+		// set up the facebook controller
+		$facebook = Core::instantiate("FacebookAPIController");
+
+		// the url to go after login
+		$redirect_uri = Asset::create_url("facebook","login");
+
+		// the login url
+		$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
+
+		// set for the view
+		$this->view_data("login_url",$url);
 	}
 	public function logout()
 	{
