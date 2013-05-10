@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="cols bucket">
 		<h1>Teams</h1>
-		<p>Below is all the teams with there members</p>
+		<p>Below are all the teams and their members.</p>
 
 <?php $current_team = 0; $first = true;?>
 <?php foreach($team_members as $team_member): ?>
@@ -38,9 +38,10 @@
 					<div class='cols'><?php echo $team_member['Member']['phone'] ?></div>
 					<div class='cols'>
 						<select id="update-<?php echo $team_member['TeamMember']['id']?>" data-team-member-id="<?php echo $team_member['TeamMember']['id']?>" data-member-id="<?php echo $team_member['Member']['id']?>">
+
 							<option data-member-type-id="1" data-team-member-type-id="4" <?php if( $team_member['TeamMemberType']['id'] === "4")echo "selected"?>>Team Leader</option>
 							<option data-team-member-type-id="1" <?php if($team_member['TeamMemberType']['id'] === "1") echo "selected" ?>>Shepherd</option>
-							<option data-team-member-type-id="2" <?php if($team_member['TeamMemberType']['id'] === "2") echo "selected" ?>>Sever</option>
+							<option data-team-member-type-id="2" <?php if($team_member['TeamMemberType']['id'] === "2") echo "selected" ?>>Server</option>
 							<option data-team-member-type-id="3" <?php if($team_member['TeamMemberType']['id'] === "3") echo "selected" ?>>Archive</option>
 						</select>
 						<a href="#update-<?php echo $team_member['TeamMember']['id']?>" class="update"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
@@ -64,7 +65,7 @@
 		var data = {id:selected.data("update-id")}
 		data[selected.data("update")] = selected.val();
 
-		if(selected.data("team-member-type-id") === "4")
+		if(selected.data("team-member-type-id") === 4)
 		{
 			$.ajax({
 				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id")+".json",
@@ -91,7 +92,6 @@
 					data
 				}
 			});
-		console.log("selected",selected);
 
 	});
 </script>

@@ -268,6 +268,7 @@
 			// if the save was not successful
 			if(!$this->Member->success)
 			{
+
 				// set the errors
 				$this->view_data("errors",$this->Member->error);
 			}

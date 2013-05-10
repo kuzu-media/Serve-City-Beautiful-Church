@@ -8,8 +8,8 @@
 <h2 id="areas">Areas to Serve</h2>
 </div>
 
-<div class="row">
-<?php foreach($teams as $team):?>
+<?php foreach($teams as $i=>$team):?>
+	<?php if($i%3 == 0) echo "<div class='row'>";?>
 	<div class="cols col-4">
 		<div class="bucket">
 			<?php echo Asset::img($team['photo'])?>
@@ -17,5 +17,6 @@
 			<p><?php echo $team['summary']?></p>
 		</div>
 	</div>
+	<?php if($i%3 == 2) echo "</div>";?>
 <?php endforeach; ?>
 </div>

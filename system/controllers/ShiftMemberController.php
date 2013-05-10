@@ -142,7 +142,7 @@
 						"Member"=>array("id","phone"),
 						"TeamMember"=>array("id","team_id","member_id","team_member_type_id")
 					);
-					$this->TeamMember->options['WHERE'] = array("TeamMember.team_member_type_id in (1,4)");
+					$this->TeamMember->options['where'] = array("TeamMember.team_member_type_id in (1,4)");
 
 					$shepherds = $this->TeamMember->findByTeamId($shift['Shift']['team_id']);
 
