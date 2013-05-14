@@ -33,8 +33,13 @@
 		</div>
 	</div>
 	<?php echo $content_for_layout?>
-	<footer class="row">
-		<p class="cols">&copy;<?php echo date("Y")?> City Beautiful Church</p>
+	<img src="http://www.citybeautifulchurch.com/wp-content/themes/beautiful/images/bg_footer.png" id="footer_img" />
+	<footer>
+
+		<div class="row">
+			<p class="cols col-6"><a href="http://citybeautifulchurch.com">www.citybeautifulchurch.com</a></p>
+			<p class="cols col-6 right">&copy;<?php echo date("Y")?> City Beautiful Church</p>
+		</div>
 	</footer>
 </body>
 </html>

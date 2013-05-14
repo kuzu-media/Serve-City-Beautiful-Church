@@ -47,7 +47,7 @@
 				<div class="cols title" style="width: 25%"><h2>name</h2></div>
 				<div class="cols title" style="width: 25%"><h2>email</h2></div>
 				<div class="cols title" style="width: 25%"><h2>phone</h2></div>
-				<div class="cols title" style="width: 25%"><h2>shift(s)</h2></div>
+				<div class="cols title" style="width: 25%"><h2>opportunity(s)</h2></div>
 			</div>
 			 <?php foreach($working_members as $working_member): $member = $working_member['Member']; ?>
 				<div class="row">

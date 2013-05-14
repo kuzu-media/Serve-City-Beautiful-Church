@@ -35,7 +35,7 @@
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
 								<p class="time"><?php echo $shift['time']?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
-							<a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Shift</span></a>
+							<a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a>
 						<?php endif;?></p>
 								<?php $serving = false;?>
 
@@ -61,7 +61,7 @@
 									<?php echo $opening_tag ?>
 
 										<img src="<?php echo $member['Member']['profile_pic']?>" />
-										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel tooltip' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">x<span>Cancel Shift</span></a><?php endif;?></p>
+										<p><?php echo $member['Member']['name'];?><?php if($current): ?><a class='cancel tooltip' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">x<span>Cancel Opportunity</span></a><?php endif;?></p>
 									<?php echo $closing_tag ?>
 								<?php endforeach; endif;?>
 
@@ -71,7 +71,7 @@
 
 					<?php endforeach; endif;?>
 						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
-							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Shift</span></a>
+							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Opportunity</span></a>
 							<a class='check_availability tooltip' href="<?php echo Asset::create_url('ShiftMember','availability',array($team['id'],$date['id']))?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
 						<?php endif;?>
 					</div>
@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
 					var img = $("<img />").attr("src",data.member.profile_pic);
 					var name = $("<p>").text(data.member.name);
 					var link = "<?php echo Asset::create_url('ShiftMember','delete') ?>/"+data.shift_member_id;
-					name.append("<a href='"+link+"' class='cancel tooltip'>x<span>Cancel Shift</span></a>");
+					name.append("<a href='"+link+"' class='cancel tooltip'>x<span>Cancel Opportunity</span></a>");
 					var div = $("<div>").addClass("name").append(img).append(name);
 
 					button.replaceWith(div);
@@ -157,7 +157,7 @@ jQuery(document).ready(function($) {
 
 		var shift_info = $(this).data();
 		var modal =$("#new_shift");
-		modal.find("h1").text("New Shift for "+shift_info.teamName+" on "+shift_info.dateDate)
+		modal.find("h1").text("New Opportunity for "+shift_info.teamName+" on "+shift_info.dateDate)
 		modal.find("#date_id").val(shift_info.dateId);
 		modal.find("#team_id").val(shift_info.teamId);
 

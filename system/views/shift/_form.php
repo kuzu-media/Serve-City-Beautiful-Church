@@ -1,8 +1,8 @@
 <div class="row">
 	<div class="cols bucket">
 		<?php $params = array(); if(isset($id)) $params[0] = $id; ?>
-		<div class="row"><h1>New Shift</h1></div>
-		<p>Setup a new shift for people to serve</p>
+		<div class="row"><h1>New Opportunity</h1></div>
+		<p>Setup a new opportunity for people to serve</p>
 		<form method='POST' action='<?= Asset::create_url('Shift',$action,$params) ?>'>
 			<?php if(isset($id)):?>
 				<?php if(isset($fields) && isset($fields['id'])):?>

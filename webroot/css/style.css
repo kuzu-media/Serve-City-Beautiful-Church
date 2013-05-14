@@ -19,7 +19,13 @@ header {
 .utility {
   position: absolute;
   top: 10px;
-  right: 20px; }
+  right: 20px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-size: 1.2rem;
+  line-height: 12px;
+  line-height: 1em;
+  color: #666666; }
 
 .nav_containter {
   width: 100%;
@@ -100,8 +106,33 @@ input.button {
   border: none;
   margin: 0; }
 
+.container {
+  overflow: hidden; }
+
+#footer_img {
+  width: 100%;
+  min-width: 1300px;
+  margin: 0;
+  display: block; }
+
 footer {
-  padding: 2.5% 0; }
+  clear: both;
+  background-color: #383838;
+  overflow: hidden; }
+  footer .row {
+    overflow: hidden; }
+  footer p, footer a {
+    color: white;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-size: 1rem;
+    line-height: 10px;
+    line-height: 1em;
+    font-family: Oswald, Arial, sans-serif;
+    font-weight: 300;
+    padding: 0; }
+    footer p.right, footer a.right {
+      text-align: right; }
 
 .row {
   width: 100%;
@@ -280,6 +311,8 @@ footer {
   position: absolute;
   right: 5px;
   bottom: 5px; }
+  .new_shift span {
+    width: 91px; }
 
 .check_availability {
   position: absolute;
@@ -293,12 +326,12 @@ footer {
   margin-left: 4px;
   color: #c94456; }
   .cancel span {
-    width: 65px; }
+    width: 106px; }
 
 .remove {
   color: #c94456; }
   .remove span {
-    width: 75px; }
+    width: 113px; }
 
 .modal {
   display: none;

@@ -28,7 +28,7 @@ if($stmt->execute(array("reminder_day_id"=>$today,"date"=>$sunday)))
 
 		foreach ($results as $result)
 		{
-			$message = "Don't forget you signed up to serve this Sunday (".$result['date'].") on the ".$result['name']." team at ".$result['time'].".";
+			$message = "Remember you signed up to serve this Sunday (".$result['date'].") on the ".$result['name']." team at ".$result['time'].".";
 
 			$phone = preg_replace('/[\D]/', "", $result['phone']);
 

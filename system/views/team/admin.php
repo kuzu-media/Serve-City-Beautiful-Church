@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row container">
 	<div class="cols bucket">
 		<h1>Teams</h1>
 		<p>Below are all the teams and their members.</p>
@@ -31,8 +31,22 @@
 				</div>
 	<?php endif;?>
 				<div class="row">
-					<div class='cols name'>
-						<img src="<?php echo $team_member['Member']['profile_pic'] ?>" width="30" /><?php echo $team_member['Member']['name'] ?>
+					<div class="cols">
+					<?php
+						if($team_member['Member']['facebook_id'] && !$current)
+						{
+							$opening_tag = "<a href='http://facebook.com/".$team_member['Member']['facebook_id']."' class='name'>";
+							$closing_tag = "</a>";
+						}
+						else
+						{
+							$opening_tag = "<div class='name'>";
+							$closing_tag = "</div>";
+						}
+					?>
+						<?php echo $opening_tag ?>
+							<img src="<?php echo $team_member['Member']['profile_pic'] ?>" width="30" /><?php echo $team_member['Member']['name'] ?>
+						<?php echo $closing_tag ?>
 					</div>
 					<div class='cols'><?php echo $team_member['Member']['email'] ?></div>
 					<div class='cols'><?php echo $team_member['Member']['phone'] ?></div>
