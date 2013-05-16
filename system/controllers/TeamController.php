@@ -114,6 +114,24 @@
 		//if information was sent
 		if($team)
 		{
+
+			// if there is a profile pic upload
+			if(isset($_FILES['photo']) && !empty($_FILES['photo']['name']))
+			{
+				$extension = pathinfo($_FILES['photo']['name']);
+				$file_name = "team_pics/pic-".time().".".$extension['extension'];
+				move_uploaded_file($_FILES["photo"]['tmp_name'], WEBROOT_PATH."/".Asset::$paths['img'].$file_name);
+
+				$team["photo"] = $file_name;
+
+			}
+			// if they didn't upload a new profile pic and there was already one set it
+			else
+			{
+				unset($team['photo']);
+
+			}
+
 			// load the model
 			$this->loadModel("Team");
 
@@ -142,7 +160,6 @@
 			// set the team id
 			$team['id'] = $team_id;
 
-
 			// if there is a profile pic upload
 			if(isset($_FILES['photo']) && !empty($_FILES['photo']['name']))
 			{
@@ -159,6 +176,7 @@
 				unset($team['photo']);
 
 			}
+
 			// load the model
 			$this->loadModel("Team");
 
