@@ -48,10 +48,10 @@
 		$this->Date->options['recursive'] = 0;
 		$this->Date->options['limit'] = array(0,5);
 
-		$week1 = strtotime('next sunday +'.(0 + ($page * 28)).' Days');
-		$week2 = strtotime('next sunday +'.(7 + ($page * 28)).' Days');
-		$week3 = strtotime('next sunday +'.(14 + ($page * 28)).' Days');
-		$week4 = strtotime('next sunday +'.(21+ ($page * 28)).' Days');
+		$week1 = strtotime('sunday +'.(0 + ($page * 28)).' Days');
+		$week2 = strtotime('sunday +'.(7 + ($page * 28)).' Days');
+		$week3 = strtotime('sunday +'.(14 + ($page * 28)).' Days');
+		$week4 = strtotime('sunday +'.(21+ ($page * 28)).' Days');
 
 
 		$this->Date->options['where'] = array("Date.date IN ('".Date('m/d/y',$week1)."','".Date('m/d/y',$week2)."','".Date('m/d/y',$week3)."','".Date('m/d/y',$week4)."')");
