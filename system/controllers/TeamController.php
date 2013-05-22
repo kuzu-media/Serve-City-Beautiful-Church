@@ -241,7 +241,7 @@
 		$this->loadModel("TeamMember");
 
 		// order by the team
-		$this->TeamMember->options['orderBy'] = array("TeamMember","team_id","ASC");
+		$this->TeamMember->options['orderBy'] = array("TeamMember","team_id","ASC, TeamMemberType.id ASC");
 
 		// get all the Teams
 		$team_members = $this->TeamMember->findAll();
