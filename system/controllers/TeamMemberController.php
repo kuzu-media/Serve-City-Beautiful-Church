@@ -177,4 +177,160 @@
 
 		}
 	}
+
+	public function available($info)
+	{
+		$timestamp = strtotime($info['date']);
+
+		$info['start_date'] = date('m/01/y', $timestamp);
+
+		$info['end_date'] = date('m/t/y', $timestamp);
+
+		switch ($info['date']) {
+			case date("m/d/y",strtotime("First Sunday of ".date('F',$timestamp))):
+				$info['week_id'] = 1;
+				break;
+			case date("m/d/y",strtotime("Second Sunday of ".date('F',$timestamp))):
+				$info['week_id'] = 2;
+				break;
+			case date("m/d/y",strtotime("Third Sunday of ".date('F',$timestamp))):
+				$info['week_id'] = 3;
+				break;
+			case date("m/d/y",strtotime("Fourth Sunday of ".date('F',$timestamp))):
+				$info['week_id'] = 4;
+				break;
+			case date("m/d/y",strtotime("Fifth Sunday of ".date('F',$timestamp))):
+				$info['week_id'] = 5;
+				break;
+		}
+
+		$this->loadModel('TeamMember');
+
+		$rec = $this->_get_recommended($info);
+
+		$this->view_data('recommened', $rec);
+
+		$serving = $this->_get_serving($info);
+
+		$this->view_data('serving',$serving);
+
+		$sunday = $this->_get_sunday($info);
+
+		$this->view_data('sunday',$sunday);
+
+		$max = $this->_get_max($info);
+
+		$this->view_data('max',$max);
+
+		$archived = $this->_get_archived($info);
+
+		$this->view_data('archived',$archived);
+
+		$this->view_data('date',$info['date']);
+
+	}
+
+	private function _get_recommended($info)
+	{
+		$this->TeamMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"));
+		$this->TeamMember->options['recursive'] = 1;
+		$this->TeamMember->belongsTo = array("Member");
+		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
+		$this->TeamMember->options['where'] = array(
+			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"MemberWeek.week_id in (".$info['week_id'].",6)",
+			"TeamMember.team_member_type_id !=  3",
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+		);
+		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+
+		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+	}
+
+	private function _get_serving($info)
+	{
+		$this->TeamMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),"Team"=>array("id","name"),"Shift"=>array("id","time","team_id"),"TeamMember"=>array('id'));
+		$this->TeamMember->options['recursive'] = 3;
+		$this->TeamMember->hasMany = array();
+		$this->TeamMember->belongsTo = array("Member");
+		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"),array('ShiftMember','Member'),array('ShiftMember','Shift','LEFT',true),array('Shift','Team','LEFT',true));
+		$this->TeamMember->options['where'] = array(
+			"MemberWeek.week_id in (".$info['week_id'].",6)",
+			"TeamMember.team_member_type_id !=  3",
+			"TeamMember.member_id IN ( SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.member_id NOT IN (SELECT member_id from shift_member WHERE shift_member.shift_id = ".$info['shift_id']."))",
+			"date_id"=>array($info['date_id'],"Shift")
+		);
+		$this->TeamMember->options['key'] = array("Team"=>"id");
+
+
+		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+	}
+
+	private function _get_sunday($info)
+	{
+		$this->TeamMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"));
+		$this->TeamMember->options['recursive'] = 1;
+		$this->TeamMember->belongsTo = array("Member");
+		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
+		$this->TeamMember->options['where'] = array(
+			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"MemberWeek.week_id NOT IN (".$info['week_id'].",6)",
+			"TeamMember.team_member_type_id !=  3",
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+		);
+		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+
+		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+	}
+
+	private function _get_max($info)
+	{
+		$this->TeamMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"));
+		$this->TeamMember->options['recursive'] = 1;
+		$this->TeamMember->belongsTo = array("Member");
+		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
+		$this->TeamMember->options['where'] = array(
+			"Member.times <= (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"MemberWeek.week_id IN (".$info['week_id'].",6)",
+			"TeamMember.team_member_type_id !=  3",
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+		);
+		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+
+		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+	}
+	private function _get_archived($info)
+	{
+
+		$this->TeamMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"));
+		$this->TeamMember->options['recursive'] = 1;
+		$this->TeamMember->belongsTo = array("Member");
+		$this->TeamMember->options['where'] = array(
+			"TeamMember.team_member_type_id =  3",
+		);
+		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+
+		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+
+	}
 }

@@ -827,14 +827,21 @@ Class ORM extends Database {
 			$table1 = $tables[0];
 			$table2 = $tables[1];
 			$direction = isset($tables[2])?$tables[2]:"LEFT";
+			$belongsTo = isset($tables[3])?$tables[3]:false;
 			$dbTable1 = Core::to_db($table1);
 			$dbTable2 = Core::to_db($table2);
+
 
 			if(!in_array($table1, $this->hasMany) && $table1 != $this->_name)
 			{
 				array_push($this->hasMany, $table1);
 			}
-			if(!in_array($table2, $this->belongsTo))
+
+			if($belongsTo && (!in_array($table2, $this->belongsTo) && $table2 != $this->_name))
+			{
+				array_push($this->hasMany, $table2);
+			}
+			else if(!in_array($table2, $this->belongsTo))
 			{
 				array_push($this->belongsTo, $table2);
 			}

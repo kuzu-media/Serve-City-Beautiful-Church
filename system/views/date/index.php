@@ -35,8 +35,9 @@
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
 								<p class="time"><?php echo $shift['time']?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
-							<a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a>
-						<?php endif;?></p>
+								<a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a>
+								<a class='check_availability tooltip' href="<?php echo Asset::create_url('TeamMember','available')?>" data-shift_id="<?php echo $shift['id']?>" data-team_id="<?php echo $team['id']?>" data-date_id="<?php echo $date['id']?>" data-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
+							<?php endif;?></p>
 								<?php $serving = false;?>
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
@@ -72,7 +73,7 @@
 					<?php endforeach; endif;?>
 						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
 							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Opportunity</span></a>
-							<a class='check_availability tooltip' href="<?php echo Asset::create_url('ShiftMember','availability',array($team['id'],$date['id']))?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
+
 						<?php endif;?>
 					</div>
 				<?php endforeach; ?>
@@ -138,10 +139,10 @@ jQuery(document).ready(function($) {
 			var button = $(this);
 			$.ajax({
 					url: button.attr('href'),
-					type: 'get',
+					type: 'post',
+					data: button.data(),
 					success: function (data) {
 						var modal = $(data);
-						modal.find("h1:first").text("Members Available on "+button.data("date-date")+" for "+ button.data("team-name"));
 						modal.appendTo("body").modal();
 					}
 				});

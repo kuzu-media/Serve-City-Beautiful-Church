@@ -33,6 +33,11 @@
 				<div class="row">
 					<div class="cols">
 					<?php
+						$current = false;
+						if($team_member['Member']['id'] === Auth::user('id'))
+						{
+							$current= true;
+						}
 						if($team_member['Member']['facebook_id'] && !$current)
 						{
 							$opening_tag = "<a href='http://facebook.com/".$team_member['Member']['facebook_id']."' class='name'>";

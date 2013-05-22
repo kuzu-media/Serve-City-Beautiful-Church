@@ -211,6 +211,20 @@ footer {
 .facebook {
   margin: 20px 0 10px; }
 
+table {
+  width: 98%;
+  margin: 0;
+  border-left: 1px solid #666666;
+  border-bottom: 1px solid #666666; }
+  table .title {
+    background-color: #383838; }
+    table .title h2 {
+      background: none; }
+  table td {
+    border-right: 1px solid #666666;
+    border-top: 1px solid #666666;
+    width: 33%; }
+
 .arrow {
   display: block;
   height: 0;
@@ -231,19 +245,6 @@ footer {
   margin: 0;
   border-left: 1px solid #666666;
   border-bottom: 1px solid #666666; }
-  .table .tooltip.status {
-    position: static; }
-    .table .tooltip.status .bucket {
-      display: none;
-      position: absolute;
-      border: 1px solid #383838;
-      width: 20%;
-      z-index: 3;
-      font-size: 75%;
-      margin: 0;
-      padding: 0 0.5% 0.5% 0.5%; }
-    .table .tooltip.status:hover .bucket {
-      display: block; }
   .table .row {
     display: table-row; }
   .table .cols {
@@ -255,35 +256,48 @@ footer {
     vertical-align: middle;
     padding: 1%;
     width: 18%; }
-  .table .shift {
-    margin-bottom: 20px; }
-  .table .time {
-    font-weight: 700; }
-  .table .title {
-    padding: 0;
-    background-color: #383838; }
-    .table .title .info {
-      display: inline;
-      vertical-align: top;
-      height: 20px; }
-    .table .title h2 {
-      width: 100%;
-      margin: 0;
-      padding: 2% 0; }
-  .table .name {
-    vertical-align: middle;
-    line-height: 25px;
-    margin: 2% 0; }
-    .table .name img {
-      float: left;
-      height: 25px;
-      width: auto;
-      margin-right: 2%; }
-  .table a.name {
+
+table .tooltip.status, .table .tooltip.status {
+  position: static; }
+  table .tooltip.status .bucket, .table .tooltip.status .bucket {
+    display: none;
+    position: absolute;
+    border: 1px solid #383838;
+    width: 20%;
+    z-index: 3;
+    font-size: 75%;
+    margin: 0;
+    padding: 0 0.5% 0.5% 0.5%; }
+  table .tooltip.status:hover .bucket, .table .tooltip.status:hover .bucket {
     display: block; }
-  .table .update img {
-    vertical-align: middle;
-    display: inline; }
+table .shift, .table .shift {
+  margin-bottom: 20px;
+  position: relative; }
+table .time, .table .time {
+  font-weight: 700; }
+table .title, .table .title {
+  padding: 0;
+  background-color: #383838; }
+  table .title .info, .table .title .info {
+    display: inline;
+    vertical-align: top;
+    height: 20px; }
+  table .title h2, .table .title h2 {
+    padding: 4px 0; }
+table .name, .table .name {
+  vertical-align: middle;
+  line-height: 25px;
+  margin: 2% 0; }
+  table .name img, .table .name img {
+    float: left;
+    height: 25px;
+    width: auto;
+    margin-right: 2%; }
+table a.name, .table a.name {
+  display: block; }
+table .update img, .table .update img {
+  vertical-align: middle;
+  display: inline; }
 
 .team_date {
   position: relative; }
@@ -317,7 +331,7 @@ footer {
 .check_availability {
   position: absolute;
   right: 5px;
-  top: 5px; }
+  top: 0; }
   .check_availability span {
     width: 100px; }
 
