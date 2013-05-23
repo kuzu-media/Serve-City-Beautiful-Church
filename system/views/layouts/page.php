@@ -22,7 +22,6 @@
 	<div class="nav_containter">
 		<div class="row">
 			<nav>
-
 				<a href="<?php echo Asset::create_url("team","index")?>#areas">Areas to Serve</a>
 				<a href="<?php echo Asset::create_url("date","index")?>">Calendar</a>
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>

@@ -282,7 +282,7 @@
 		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
 		$this->TeamMember->options['where'] = array(
 			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
-			"MemberWeek.week_id NOT IN (".$info['week_id'].",6)",
+			"TeamMember.member_id NOT IN (SELECT member_id from member_week WHERE member_week.member_id = TeamMember.member_id AND member_week.week_id IN (".$info['week_id'].",6))",
 			"TeamMember.team_member_type_id !=  3",
 			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
 		);

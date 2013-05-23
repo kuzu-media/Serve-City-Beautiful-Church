@@ -50,7 +50,8 @@
 						}
 					?>
 						<?php echo $opening_tag ?>
-							<img src="<?php echo $team_member['Member']['profile_pic'] ?>" width="30" /><?php echo $team_member['Member']['name'] ?>
+							<img src="<?php echo $team_member['Member']['profile_pic'] ?>" width="30" />
+							<p><?php echo $team_member['Member']['name'] ?></p>
 						<?php echo $closing_tag ?>
 					</div>
 					<div class='cols'><?php echo $team_member['Member']['email'] ?></div>
