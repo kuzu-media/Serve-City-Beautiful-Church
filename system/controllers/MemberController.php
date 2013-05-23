@@ -435,7 +435,7 @@
 			foreach($member['teams'] as $team_id)
 			{
 				// save each team member
-				$team_member_controller->post(array("team_id"=>$team_id,"member_id"=>$member['id'],"team_member_type_id"=>2));
+				$team_member_controller->post(array("team_id"=>$team_id,"member_id"=>$member['id'],"team_member_type_id"=>3));
 			}
 
 		}
