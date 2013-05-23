@@ -59,7 +59,7 @@
 			<p>Opportunities are times for when members can serve. Each opportunity gets its own serve button that any member can click on.</p>
 
 			<h4 id="create_op">Create New Opportunity</h4>
-			<p><?php echo Asset::img('help_pics/new_opportunity.png') ?>To create a new opportunity go to the the calendar page. As a team leader you will be able to see "+" buttons on any team and date.</p>
+			<p><?php echo Asset::img('help_pics/new_opportunity.png') ?>To create a new opportunity go to the the calendar page. As a team leader you will be able to see "+" buttons on any team and date.<?php echo Asset::img('help_pics/new_oppoortunity_popup.png')?>A pop-up will then appear allowing you to input a time and any notes for this shift. Notes can be anything people will need to know for this service or something additional about the opportunity.</p>
 
 			<h4 id="delete_op">Delete Opportunity</h4>
 			<p><?php echo Asset::img('help_pics/delete_opportunity.png')?>To delete a opportunity simply click the "X" next to any opportunity. You can only delete opportunities that do not already have members.</p>
