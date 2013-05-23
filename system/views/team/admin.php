@@ -38,7 +38,7 @@
 						{
 							$current= true;
 						}
-						if($team_member['Member']['facebook_id'] && !$current)
+						if($team_member['Member']['facebook_id'])
 						{
 							$opening_tag = "<a href='http://facebook.com/".$team_member['Member']['facebook_id']."' class='name'>";
 							$closing_tag = "</a>";
@@ -85,7 +85,7 @@
 		var data = {id:selected.data("update-id")}
 		data[selected.data("update")] = selected.val();
 
-		if(selected.data("team-member-type-id") === 4)
+		if(selected.data("team-member-type-id") === 1)
 		{
 			$.ajax({
 				url: '<?php echo Asset::relative_url() ?>'+"member/update/"+select.data("member-id")+".json",

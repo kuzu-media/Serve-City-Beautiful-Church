@@ -41,6 +41,7 @@
 								<a class='check_availability tooltip' href="<?php echo Asset::create_url('TeamMember','available')?>" data-shift_id="<?php echo $shift['id']?>" data-team_id="<?php echo $team['id']?>" data-date_id="<?php echo $date['id']?>" data-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
 								<?php endif;?>
 							<?php endif;?></p>
+								<?php if($shift['notes']):?><p><?php echo $shift['notes'] ?></p><?php endif;?>
 								<?php $serving = false;?>
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
@@ -51,22 +52,16 @@
 											$serving = true;
 											$current= true;
 										}
-										if($member['Member']['facebook_id'] && !$current)
-										{
-											$opening_tag = "<a href='http://facebook.com/".$member['Member']['facebook_id']."' class='name'>";
-											$closing_tag = "</a>";
-										}
-										else
-										{
-											$opening_tag = "<div class='name'>";
-											$closing_tag = "</div>";
-										}
 									?>
-									<?php echo $opening_tag ?>
-
+									<div class='name'>
+										<?php if($member['Member']['facebook_id']):?>
+											<a href='http://facebook.com/<?php echo $member['Member']['facebook_id']?>'>
+										<?php endif;?>
 										<img src="<?php echo $member['Member']['profile_pic']?>" />
-										<p><?php echo $member['Member']['name'];?><?php if($current && !$past): ?><a class='cancel tooltip' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">x<span>Cancel Opportunity</span></a><?php endif;?></p>
-									<?php echo $closing_tag ?>
+										<p><?php echo $member['Member']['name'];?><?php if($member['Member']['facebook_id']) echo "</a>" ?>	<?php if($current && !$past): ?><a class='cancel tooltip' href="<?php echo Asset::create_url('ShiftMember','delete',array($member['ShiftMember']['id']))?>">x<span>Cancel Opportunity</span></a><?php endif;?></p>
+
+
+									</div>
 								<?php endforeach; endif;?>
 
 								<?php if(!$serving && strtotime($date['date']) > strtotime("yesterday")):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
@@ -191,6 +186,10 @@ jQuery(document).ready(function($) {
 		<div>
 			<label for='time'>Time:</label>
 			<input type='text' id='time' name='time' value='<?php if(isset($time)) echo $time; ?>' placeholder="ex. 5:45 pm" />
+		</div>
+		<div>
+			<label for='notes'>Notes:</label>
+			<input type='text' id='notes' name='notes' value='<?php if(isset($notes)) echo $notes; ?>' placeholder="ex. Toddlers" />
 		</div>
 		<input type='submit' value='save' class="button" />
 	</form>
