@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="bucket cols">
 		<h1>Welcome!</h1>
-		<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, sequi, voluptates itaque reiciendis minus eaque porro dignissimos unde incidunt veniam quidem eos nulla quisquam inventore nesciunt cupiditate nemo? Dolorum, ex.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque ad cumque enim eligendi dignissimos soluta dolorem. Fugit, eius accusamus repellat repudiandae illo numquam provident unde corporis necessitatibus vero totam aut.</p>
+		<p>Our desire as a church community is to empower one another to step into the various and unique ways God has made and gifted each one of us. This isn’t a top down thing where the leadership of our church leverages subordinate members to accomplish our agenda. Rather, we believe that God has given every one of us a piece of a very large puzzle. As each of us offers our unique contribution, we see a more complete picture of who He is and what He’s doing as He establishes the Kingdom of Heaven here on earth.</p>
 	</div>
 </div>
 <div class="row">
