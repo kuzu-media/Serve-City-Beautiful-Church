@@ -66,4 +66,13 @@ Class Member extends Model
 
 	}
 
+	public static function phone($number)
+	{
+		$phone = preg_replace("/[^0-9]/", "", $number);
+
+		$phone = preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
+
+		echo $phone;
+	}
+
 }

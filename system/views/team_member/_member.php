@@ -21,7 +21,7 @@
 		<?php echo $Member['email'] ?>
 	</div>
 	<div class="cols">
-		<?php echo $Member['phone'] ?>
+		<?php Member::phone($Member['phone']) ?>
 	</div>
 
 	<?php if(isset($Team) && isset($Shift)):?>

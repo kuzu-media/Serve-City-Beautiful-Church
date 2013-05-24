@@ -55,7 +55,7 @@
 						<?php echo $closing_tag ?>
 					</div>
 					<div class='cols'><?php echo $team_member['Member']['email'] ?></div>
-					<div class='cols'><?php echo $team_member['Member']['phone'] ?></div>
+					<div class='cols'><?php Member::phone($team_member['Member']['phone']) ?></div>
 					<div class='cols'>
 						<select id="update-<?php echo $team_member['TeamMember']['id']?>" data-team-member-id="<?php echo $team_member['TeamMember']['id']?>" data-member-id="<?php echo $team_member['Member']['id']?>">
 
