@@ -64,7 +64,7 @@
 									</div>
 								<?php endforeach; endif;?>
 
-								<?php if(!$serving && strtotime($date['date']) > strtotime("yesterday")):?><a href="#" class="button serve" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
+								<?php if(strtotime($date['date']) > strtotime("yesterday")):?><a href="#" class="button <?php echo $serving?'inactive':'serve'?>" data-shift_id="<?php echo $shift['id'] ?>">Serve</a><?endif?>
 							</div>
 						<?php $shift_count++ ;endif?>
 
@@ -87,6 +87,9 @@
 jQuery(document).ready(function($) {
 
 	var logged_in = "<?php  var_export($logged_in) ?>";
+	$(".inactive").on('click',function(e){
+		e.preventDefault();
+	});
 	$(".serve").on('click',function(e){
 		e.preventDefault();
 

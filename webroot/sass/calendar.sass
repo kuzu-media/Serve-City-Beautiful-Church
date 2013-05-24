@@ -1,8 +1,10 @@
 table
-	width: 98%
+	width: 100%
 	margin: 0
 	border-left: 1px solid $light-gray
 	border-bottom: 1px solid $light-gray
+	max-width: 980px
+
 
 	.title
 
@@ -17,6 +19,12 @@ table
 		border-right: 1px solid $light-gray
 		border-top: 1px solid $light-gray
 		width: 33%
+
+#calender
+
+	td
+
+		width: 20%
 
 .arrow
 
@@ -58,7 +66,7 @@ table
 		padding: 1%
 		width: 18%
 
-table, .table
+#calender, .table
 
 	.tooltip.status
 
@@ -80,11 +88,24 @@ table, .table
 			.bucket
 
 				display: block
+	.team_date
+
+		position: relative
+		padding: 2% 1%
 
 	.shift
 
 		margin-bottom: 20px
 		position: relative
+
+	.inactive
+
+		background-color: $light-gray
+		cursor: default
+
+		&:hover
+
+			text-decoration: none
 
 	.time
 
@@ -106,7 +127,7 @@ table, .table
 
 			padding: 4px 0
 
-	.row .name
+	.name
 
 		line-height: 1em
 		margin: 2% 0
@@ -144,9 +165,8 @@ table, .table
 			vertical-align: middle
 			display: inline
 
-.team_date
 
-	position: relative
+
 
 .tooltip
 
@@ -177,9 +197,7 @@ table, .table
 
 .new_shift
 
-	position: absolute
-	right: 5px
-	bottom: 5px
+	float: right
 
 	span
 

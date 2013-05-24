@@ -246,10 +246,11 @@ footer {
   margin: 5px 0; }
 
 table {
-  width: 98%;
+  width: 100%;
   margin: 0;
   border-left: 1px solid #666666;
-  border-bottom: 1px solid #666666; }
+  border-bottom: 1px solid #666666;
+  max-width: 980px; }
   table .title {
     background-color: #383838; }
     table .title h2 {
@@ -258,6 +259,9 @@ table {
     border-right: 1px solid #666666;
     border-top: 1px solid #666666;
     width: 33%; }
+
+#calender td {
+  width: 20%; }
 
 .arrow {
   display: block;
@@ -291,9 +295,9 @@ table {
     padding: 1%;
     width: 18%; }
 
-table .tooltip.status, .table .tooltip.status {
+#calender .tooltip.status, .table .tooltip.status {
   position: static; }
-  table .tooltip.status .bucket, .table .tooltip.status .bucket {
+  #calender .tooltip.status .bucket, .table .tooltip.status .bucket {
     display: none;
     position: absolute;
     border: 1px solid #383838;
@@ -302,45 +306,50 @@ table .tooltip.status, .table .tooltip.status {
     font-size: 75%;
     margin: 0;
     padding: 0 0.5% 0.5% 0.5%; }
-  table .tooltip.status:hover .bucket, .table .tooltip.status:hover .bucket {
+  #calender .tooltip.status:hover .bucket, .table .tooltip.status:hover .bucket {
     display: block; }
-table .shift, .table .shift {
+#calender .team_date, .table .team_date {
+  position: relative;
+  padding: 2% 1%; }
+#calender .shift, .table .shift {
   margin-bottom: 20px;
   position: relative; }
-table .time, .table .time {
+#calender .inactive, .table .inactive {
+  background-color: #666666;
+  cursor: default; }
+  #calender .inactive:hover, .table .inactive:hover {
+    text-decoration: none; }
+#calender .time, .table .time {
   font-weight: 700; }
-table .title, .table .title {
+#calender .title, .table .title {
   padding: 0;
   background-color: #383838; }
-  table .title .info, .table .title .info {
+  #calender .title .info, .table .title .info {
     display: inline;
     vertical-align: top;
     height: 20px; }
-  table .title h2, .table .title h2 {
+  #calender .title h2, .table .title h2 {
     padding: 4px 0; }
-table .row .name, .table .row .name {
+#calender .name, .table .name {
   line-height: 1em;
   margin: 2% 0;
   display: table; }
-  table .row .name img, .table .row .name img {
+  #calender .name img, .table .name img {
     float: left;
     height: 25px;
     width: auto;
     margin-right: 2%;
     max-width: none; }
-  table .row .name p, .table .row .name p {
+  #calender .name p, .table .name p {
     display: table-cell;
     vertical-align: middle;
     padding-left: 4%;
     width: 100%;
     border-bottom: none;
     padding-bottom: 0; }
-table .update img, .table .update img {
+#calender .update img, .table .update img {
   vertical-align: middle;
   display: inline; }
-
-.team_date {
-  position: relative; }
 
 .tooltip {
   position: relative;
@@ -362,9 +371,7 @@ table .update img, .table .update img {
     display: block; }
 
 .new_shift {
-  position: absolute;
-  right: 5px;
-  bottom: 5px; }
+  float: right; }
   .new_shift span {
     width: 91px; }
 
