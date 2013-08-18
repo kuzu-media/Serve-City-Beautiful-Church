@@ -2,7 +2,12 @@
 	<div class="cols bucket">
 		<h1>Teams</h1>
 		<p>Below are all the teams and their members.</p>
-
+<ul class="row">
+	<h3>Jump to Team:</h3>
+	<?php foreach($team_names as $team_name):?>
+		<li><a href="#team-<?php echo $team_name['id']?>"><?php echo $team_name['name']?></a></li>
+	<?php endforeach;?>
+</ul>
 <?php $current_team = 0; $first = true;?>
 <?php foreach($team_members as $team_member): ?>
 	<?php if($current_team !== $team_member['Team']['id']): $new = true; $current_team = $team_member['Team']['id'] ?>
@@ -10,7 +15,7 @@
 				</div>
 		</div>
 		<?php endif;?>
-		<div class="row"><h1><?php echo $team_member['Team']['name'] ?></h1></div>
+		<div class="row" id="team-<?php echo $team_member['Team']['id'] ?>"><h1><?php echo $team_member['Team']['name'] ?></h1></div>
 		<div class="row">
 			<div class="table">
 				<div class="cols title"><h2>name</h2></div>
