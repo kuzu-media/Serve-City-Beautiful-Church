@@ -26,7 +26,7 @@
 			<nav>
 				<a href="<?php echo Asset::create_url("team","index")?>#areas">Areas to Serve</a>
 				<a href="<?php echo Asset::create_url("date","index")?>">Calendar</a>
-				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+				<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 					<a href="<?php echo Asset::create_url('team','admin')?>">Teams</a>
 					<a href="<?php echo Asset::create_url('pages','help')?>">Help</a>
 				<?php endif;?>

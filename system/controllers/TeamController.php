@@ -24,7 +24,7 @@
 		$url = Core::$info_of_url;
 
 		// if the user isn't an admin they can't see the admin action
-		if(Auth::user("member_type_id") !== "1" && (Core::$info_of_url['action'] === "admin" || Core::$info_of_url['action'] === 'update'))
+		if(Auth::user("member_type_id") === "2" && (Core::$info_of_url['action'] === "admin" || Core::$info_of_url['action'] === 'update'))
 		{
 
 			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);

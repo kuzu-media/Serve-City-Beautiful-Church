@@ -7,7 +7,7 @@
 			<?php $last = count($dates) - 1; $empty_notes = true; foreach($dates as $index=>$date): if(!empty($date['notes'])) $empty_notes = false;?>
 			<div class='cols col-3 title'>
 
-				<h2><?php if($index === 0 && strtotime($date['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['date'] ?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?><a class='edit_date tooltip' href="<?php echo Asset::create_url('date','update', array($date['id']))?>" data-date-id="<?php echo $date['id']?>" data-date-notes="<?php echo $date['notes'] ?>"><?php echo Asset::img('edit_date.png') ?><span>Edit Date Notes</span></a><?php endif;?><?php if($index ===  $last && strtotime($date['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
+				<h2><?php if($index === 0 && strtotime($date['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['date'] ?><?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?><a class='edit_date tooltip' href="<?php echo Asset::create_url('date','update', array($date['id']))?>" data-date-id="<?php echo $date['id']?>" data-date-notes="<?php echo $date['notes'] ?>"><?php echo Asset::img('edit_date.png') ?><span>Edit Date Notes</span></a><?php endif;?><?php if($index ===  $last && strtotime($date['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
 
 			</div>
 			<?php endforeach;?>
@@ -35,7 +35,7 @@
 					<?php $shift_count = 0; if($date['Shift']): foreach($date['Shift'] as $shift) :?>
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
-								<p class="time"><span><?php echo $shift['time']?></span><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+								<p class="time"><span><?php echo $shift['time']?></span><?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 								<?php if(!$past):?>
 								<?php if(!$shift['members']): ?><a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a><?php endif;?>
 								<a class='edit_opportunity tooltip' href="<?php echo Asset::create_url('shift','post')?>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>" data-shift-id="<?php echo $shift['id']?>"><?php echo Asset::img('edit.png') ?><span>Edit Opportunity</span></a>
@@ -70,7 +70,7 @@
 						<?php $shift_count++ ;endif?>
 
 					<?php endforeach; endif;?>
-						<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1" && !$past): ?>
+						<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2" && !$past): ?>
 							<a class='new_shift tooltip' href="<?php echo Asset::create_url('shift','post')?>>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">+<span>Add Opportunity</span></a>
 
 						<?php endif;?>
@@ -258,7 +258,7 @@ $(function() {
 </div>
 <?php endif;?>
 
-<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 <div class="modal" id="new_shift">
 	<a href="#close" class="close-modal">Close</a>
 	<h1></h1>

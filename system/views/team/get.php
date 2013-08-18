@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="cols bucket">
-		<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+		<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 			<div class="utility">
 				<a href="<?php echo Asset::create_url('team',"update",array($team['id']))?>">Edit Team</a> |
 				<a href="<?php echo Asset::create_url('testimonial',"post",array($team['id']))?>">Add Testimonial</a>
