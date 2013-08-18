@@ -106,7 +106,6 @@
 						</select>
 						<a href="#team-<?php echo $non_member['id']?>" class="team_add"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
 					</div>
-					<div
 				</div>
 			<?php endforeach;?>
 		</div>
