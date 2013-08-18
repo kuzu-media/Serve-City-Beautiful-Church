@@ -1,13 +1,13 @@
 <div class="row">
-	<div class="table cols">
-		<div class="row">
+	<div class="table cols persist-area">
+		<div class="row persist-header">
 			<div class="cols col-3 title">
 				<h2>Areas</h2>
 			</div>
 			<?php $last = count($dates) - 1; $empty_notes = true; foreach($dates as $index=>$date): if(!empty($date['notes'])) $empty_notes = false;?>
 			<div class='cols col-3 title'>
 
-				<h2><?php if($index === 0 && strtotime($date['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['date'] ?><?php if($index ===  $last && strtotime($date['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
+				<h2><?php if($index === 0 && strtotime($date['date']) > strtotime('04/28/13')) echo "<a href='".Asset::create_url('date','index',array($page-1))."' class='arrow left'>Previous Month</a>" ?><?php echo $date['date'] ?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?><a class='edit_date tooltip' href="<?php echo Asset::create_url('date','update', array($date['id']))?>" data-date-id="<?php echo $date['id']?>" data-date-notes="<?php echo $date['notes'] ?>"><?php echo Asset::img('edit_date.png') ?><span>Edit Date Notes</span></a><?php endif;?><?php if($index ===  $last && strtotime($date['date']) < strtotime('05/25/14')) echo "<a href='".Asset::create_url('date','index',array($page+1))."' class='arrow right'>Next Month</a>" ?></h2>
 
 			</div>
 			<?php endforeach;?>
@@ -17,7 +17,7 @@
 			<div class="cols col-3"></div>
 
 			<?php foreach($dates as $date):?>
-			<div class="cols col-3 note">
+			<div class="cols col-3 notes">
 
 				<?php echo $date['notes'] ?>
 			</div>
@@ -30,18 +30,19 @@
 					<h3><a href="<?php echo  Asset::create_url("team","get",array($team['id']))?>"><?php echo $team['name']?></a></h3>
 				</div>
 				<?php foreach($dates as $date):?>
-					<?php $past = strtotime($date['date']) > time()?false:true;?>
+					<?php $past = strtotime($date['date']) > (time() - 24*60*60)?false:true;?>
 					<div class="cols col-3 team_date">
 					<?php $shift_count = 0; if($date['Shift']): foreach($date['Shift'] as $shift) :?>
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
-								<p class="time"><?php echo $shift['time']?><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
+								<p class="time"><span><?php echo $shift['time']?></span><?php if(Session::get('logged_in') && Auth::user("member_type_id") === "1"): ?>
 								<?php if(!$past):?>
 								<?php if(!$shift['members']): ?><a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a><?php endif;?>
+								<a class='edit_opportunity tooltip' href="<?php echo Asset::create_url('shift','post')?>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>" data-shift-id="<?php echo $shift['id']?>"><?php echo Asset::img('edit.png') ?><span>Edit Opportunity</span></a>
 								<a class='check_availability tooltip' href="<?php echo Asset::create_url('TeamMember','available')?>" data-shift_id="<?php echo $shift['id']?>" data-team_id="<?php echo $team['id']?>" data-date_id="<?php echo $date['id']?>" data-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
 								<?php endif;?>
 							<?php endif;?></p>
-								<?php if($shift['notes']):?><p><?php echo $shift['notes'] ?></p><?php endif;?>
+								<?php if($shift['notes']):?><p class="notes"><?php echo $shift['notes'] ?></p><?php endif;?>
 								<?php $serving = false;?>
 
 								<?php if($shift['members']): foreach($shift['members'] as $member): ?>
@@ -153,6 +154,41 @@ jQuery(document).ready(function($) {
 		$("#first").modal();
 	<?php endif;?>
 
+	$(".edit_date").on('click',function(e)
+	{
+		e.preventDefault();
+
+		var link = $(this);
+
+		var modal = $("#date_notes");
+
+
+		modal.find("#date_note_id").val(link.data('date-id'));
+		modal.find("#notes").val(link.data('date-notes'));
+
+		modal.modal();
+
+	});
+
+	$(".edit_opportunity").on('click',function(e)
+	{
+		e.preventDefault();
+
+		var shift = $(this);
+		var time = shift.parent().find(' > span').text();
+		var notes = shift.parent().parent().find(' > .notes').text();
+		var shift_info = shift.data();
+		var modal = $("#new_shift");
+		modal.find("h1").text("New Opportunity for "+shift_info.teamName+" on "+shift_info.dateDate)
+		modal.find("#date_id").val(shift_info.dateId);
+		modal.find("#team_id").val(shift_info.teamId);
+		modal.find("#shift_id").val(shift_info.shiftId);
+		modal.find("#time").val(time);
+		modal.find("#notes").val(notes);
+
+		modal.modal();
+	});
+
 	$(".new_shift").on('click',function(e)
 	{
 		e.preventDefault();
@@ -166,6 +202,50 @@ jQuery(document).ready(function($) {
 		modal.modal();
 
 	});
+});
+
+function UpdateTableHeaders() {
+   $(".persist-area").each(function() {
+
+       var el             = $(this),
+           offset         = el.offset(),
+           scrollTop      = $(window).scrollTop(),
+           floatingHeader = $(".floatingHeader", this)
+
+       if ((scrollTop > offset.top) && (scrollTop < offset.top + el.height())) {
+           floatingHeader.css({
+            "visibility": "visible"
+           });
+       } else {
+           floatingHeader.css({
+            "visibility": "hidden"
+           });
+       };
+   });
+}
+
+// DOM Ready
+$(function() {
+
+   var clonedHeaderRow;
+
+   var title_width = $(".persist-header:first").find(".title:first").width();
+   $(".persist-area").each(function() {
+       clonedHeaderRow = $(".persist-header", this);
+       clonedHeaderRow
+         .before(clonedHeaderRow.clone())
+         .css("width", clonedHeaderRow.width())
+         .addClass("floatingHeader")
+         .find(".title")
+         .width(title_width);
+
+
+   });
+
+   $(window)
+    .scroll(UpdateTableHeaders)
+    .trigger("scroll");
+
 });
 </script>
 <?php if($first):?>
@@ -184,6 +264,7 @@ jQuery(document).ready(function($) {
 	<h1></h1>
 
 	<form  method='POST' action='<?php echo Asset::create_url('shift','post')?>'>
+		<input type="hidden" name="shift_id" id="shift_id" />
 		<input type="hidden" name="date_id" id="date_id" />
 		<input type="hidden" name="team_id" id="team_id" />
 		<div>
@@ -193,6 +274,20 @@ jQuery(document).ready(function($) {
 		<div>
 			<label for='notes'>Notes:</label>
 			<input type='text' id='notes' name='notes' value='<?php if(isset($notes)) echo $notes; ?>' placeholder="ex. Toddlers" />
+		</div>
+		<input type='submit' value='save' class="button" />
+	</form>
+
+</div>
+<div class="modal" id="date_notes">
+	<a href="#close" class="close-modal">Close</a>
+	<h1>Edit Date Notes</h1>
+
+	<form  method='POST' action='<?php echo Asset::create_url('date','update',array(1))?>'>
+		<input type="hidden" name="id" id="date_note_id" />
+		<div>
+			<label for='notes'>Notes:</label>
+			<textarea id="notes" name="notes"><?php if(isset($notes)) echo $notes; ?></textarea>
 		</div>
 		<input type='submit' value='save' class="button" />
 	</form>

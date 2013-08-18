@@ -1,6 +1,7 @@
 <?php
 Class Testimonial extends Model
 {
+	public $soft_delete = false;
 
 	public $belongsTo = array('Team');
 

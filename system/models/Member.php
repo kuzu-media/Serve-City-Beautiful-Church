@@ -2,11 +2,13 @@
 Class Member extends Model
 {
 
+	public $soft_delete = false;
+
 	public $belongsTo = array('ReminderDay','AlertType','LoginType','MemberType');
 
 	public $hasMany = array('ShiftMember','TeamMember',"MemberWeek");
 
-	public $required = array('name','email','profile_pic','alert_type_id');
+	public $required = array('name','email','alert_type_id');
 
 	public $rules = array(
 		'id' => array('numeric','maxLength' =>11),
@@ -62,17 +64,25 @@ Class Member extends Model
 
 		}
 
+		if(isset($data['email'])) {
+
+			$data['email'] = strtolower($data['email']);
+
+		}
+
 		return $data;
 
 	}
 
-	public static function phone($number)
+
+	public static function phone($number, $echo=true)
 	{
 		$phone = preg_replace("/[^0-9]/", "", $number);
 
 		$phone = preg_replace("/([0-9]{3})([0-9]{3})([0-9]{4})/", "($1) $2-$3", $phone);
 
-		echo $phone;
+		if($echo) echo $phone;
+		else return $phone;
 	}
 
 }

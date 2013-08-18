@@ -195,6 +195,8 @@
 				// set the errors
 				$this->view_data("errors",$this->Date->error);
 			}
+
+			header("Location: ".$_SERVER['HTTP_REFERER']);
 		}
 
 		// if there is an id

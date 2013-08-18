@@ -13,6 +13,7 @@ table
 		h2
 
 			background: none
+			position: relative
 
 	td
 
@@ -25,6 +26,14 @@ table
 	td
 
 		width: 20%
+
+.floatingHeader
+
+	position: fixed
+	top: 0
+	visibility: hidden
+	z-index: 10
+	padding: 0
 
 .arrow
 
@@ -126,6 +135,7 @@ table
 		h2
 
 			padding: 4px 0
+			position: relative
 
 	.name
 
@@ -158,7 +168,7 @@ table
 
 
 
-	.update
+	.update, .team_add
 
 		img
 
@@ -179,7 +189,10 @@ table
 		position: absolute
 		width: 50px
 		padding: 2px 5px
-		font-size: .75em
+		font-size: 11px
+		letter-spacing: normal
+		text-transform: none
+		font-family: Arvo, 'Times New Roman', serif
 		color: $gray
 		background-color: #ddd
 		bottom: -20px
@@ -194,6 +207,11 @@ table
 
 			display: block
 
+.notes
+
+	font-size: 0.89em
+	line-height: 1.3em
+	margin-bottom: 10px
 
 .new_shift
 
@@ -213,6 +231,29 @@ table
 
 		width: 100px
 
+.title .edit_date
+
+	position: relative
+	top: -2px
+	left: 2px
+
+	span
+
+		width: 100px
+
+	img
+
+		display: inline
+
+.edit_opportunity
+
+	position: absolute
+	right: 20px
+	top: 2px
+
+	span
+
+		width: 95px
 .cancel
 
 	vertical-align: -1px

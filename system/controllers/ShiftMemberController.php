@@ -139,7 +139,7 @@
 					$this->TeamMember->options['recursive'] = 1;
 					$this->TeamMember->belongsTo = array("Member");
 					$this->TeamMember->options['fields'] = array(
-						"Member"=>array("id","phone"),
+						"Member"=>array("id","phone","alert_type_id","email","name"),
 						"TeamMember"=>array("id","team_id","member_id","team_member_type_id")
 					);
 					$this->TeamMember->options['where'] = array("TeamMember.team_member_type_id in (1,2)");
@@ -152,15 +152,30 @@
 						// we are going to send a message to each sheperd
 						foreach($shepherds as $shepherd)
 						{
-							// format the shepherds phone
-							$phone = preg_replace('/[\D]/', "", $shepherd['Member']['phone']);
+							// create a message with the sheep's number and the date and time they are serving.
+							$message = $member[0]['name']." just signed up to serve on ".$shift['Date']['date']." at ".$shift['Shift']['time'].". It's their first time, so be sure to welcome them!";
 
-							// create a message with the sheeps number and the date and time they are serving.
-							$message = "Hey! ".$member[0]['name']." just signed up to serve on ".$shift['Date']['date']." at ".$shift['Shift']['time'].". It's their first time, so be sure to welcome them!";
+							// if they prefer emails
+							if($shepherd['Member']['alert_type_id'] === "1")
+							{
+								$email = "Hey ".$shepherd['Member']['name']."!\n\n".$message."\n\nThanks!";
+								// send email
+								mail($shepherd['Member']['email'], "New Member!", $email,"From: serve@citybeautifulchurch.com");
+							}
+							// if they prefer text
+							else if($shepherd['Member']['alert_type_id'] === "2")
+							{
 
-							// send a message using twilio
-							$twilio = Core::instantiate("TwilioController");
-							$message = $twilio->account->sms_messages->create("4073783757",$phone,$message);
+								$text = "Hey! ".$message;
+
+								// format the shepherds phone
+								$phone = preg_replace('/[\D]/', "", $shepherd['Member']['phone']);
+
+								// send a message using twilio
+								$twilio = Core::instantiate("TwilioController");
+								$message = $twilio->account->sms_messages->create("4073783757",$phone,$text);
+							}
+
 
 						}
 

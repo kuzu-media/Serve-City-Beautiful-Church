@@ -254,7 +254,8 @@ table {
   table .title {
     background-color: #383838; }
     table .title h2 {
-      background: none; }
+      background: none;
+      position: relative; }
   table td {
     border-right: 1px solid #666666;
     border-top: 1px solid #666666;
@@ -262,6 +263,13 @@ table {
 
 #calender td {
   width: 20%; }
+
+.floatingHeader {
+  position: fixed;
+  top: 0;
+  visibility: hidden;
+  z-index: 10;
+  padding: 0; }
 
 .arrow {
   display: block;
@@ -329,7 +337,8 @@ table {
     vertical-align: top;
     height: 20px; }
   #calender .title h2, .table .title h2 {
-    padding: 4px 0; }
+    padding: 4px 0;
+    position: relative; }
 #calender .name, .table .name {
   line-height: 1em;
   margin: 2% 0;
@@ -347,7 +356,7 @@ table {
     width: 100%;
     border-bottom: none;
     padding-bottom: 0; }
-#calender .update img, .table .update img {
+#calender .update img, #calender .team_add img, .table .update img, .table .team_add img {
   vertical-align: middle;
   display: inline; }
 
@@ -359,7 +368,10 @@ table {
     position: absolute;
     width: 50px;
     padding: 2px 5px;
-    font-size: 0.75em;
+    font-size: 11px;
+    letter-spacing: normal;
+    text-transform: none;
+    font-family: Arvo, "Times New Roman", serif;
     color: #383838;
     background-color: #dddddd;
     bottom: -20px;
@@ -369,6 +381,11 @@ table {
     font-weight: normal; }
   .tooltip:hover span {
     display: block; }
+
+.notes {
+  font-size: 0.89em;
+  line-height: 1.3em;
+  margin-bottom: 10px; }
 
 .new_shift {
   float: right; }
@@ -381,6 +398,22 @@ table {
   top: 0; }
   .check_availability span {
     width: 100px; }
+
+.title .edit_date {
+  position: relative;
+  top: -2px;
+  left: 2px; }
+  .title .edit_date span {
+    width: 100px; }
+  .title .edit_date img {
+    display: inline; }
+
+.edit_opportunity {
+  position: absolute;
+  right: 20px;
+  top: 2px; }
+  .edit_opportunity span {
+    width: 95px; }
 
 .cancel {
   vertical-align: -1px;

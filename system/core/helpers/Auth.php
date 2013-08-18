@@ -121,7 +121,7 @@ Class Auth {
 			$method = "findBy".ucfirst(AUTH_USERNAME_FIELD)."And".ucfirst(AUTH_PASSWORD_FIELD);
 
 			// the user returned from the database
-			$user_returned = $model->$method($user[AUTH_USERNAME_FIELD],Core::encrypt($user[AUTH_PASSWORD_FIELD]));
+			$user_returned = $model->$method(strtolower($user[AUTH_USERNAME_FIELD]),Core::encrypt($user[AUTH_PASSWORD_FIELD]));
 			$user_returned = $user_returned[0];
 
 			// if successfull, user is not empty, password returned equals the password passed

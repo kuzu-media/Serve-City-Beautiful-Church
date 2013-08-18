@@ -71,6 +71,55 @@
 <?php endforeach;?>
 			</div>
 		</div>
+
+<?php if(isset($non_team_members)):?>
+	<div class="row"><h1>Members Not On a Team</h1></div>
+		<div class="table" id="non_members">
+			<div class="row">
+				<div class="cols title"><h2>name</h2></div>
+				<div class="cols title"><h2>email</h2></div>
+				<div class="cols title"><h2>phone</h2></div>
+				<div class="cols title"><h2>add to team</h2></div>
+			</div>
+			<?php foreach($non_team_members as $non_member):?>
+				<div class="row">
+					<div class="cols">
+						<?php
+							$current = false;
+							if($non_member['id'] === Auth::user('id'))
+							{
+								$current= true;
+							}
+							if($non_member['facebook_id'])
+							{
+								$opening_tag = "<a href='http://facebook.com/".$non_member['facebook_id']."' class='name'>";
+								$closing_tag = "</a>";
+							}
+							else
+							{
+								$opening_tag = "<div class='name'>";
+								$closing_tag = "</div>";
+							}
+						?>
+							<?php echo $opening_tag ?>
+								<img src="<?php echo $non_member['profile_pic'] ?>" width="30" />
+								<p><?php echo $non_member['name'] ?></p>
+							<?php echo $closing_tag ?>
+					</div>
+					<div class='cols'><?php echo $non_member['email'] ?></div>
+					<div class='cols'><?php Member::phone($non_member['phone']) ?></div>
+					<div class='cols'>
+						<select id="team-<?php echo $non_member['id']?>" data-member-id="<?php echo $non_member['id']?>">
+							<?php foreach($team_names as $team_name):?>
+								<option value="<?php echo $team_name['id']?>"><?php echo $team_name['name']?></option>
+							<?php endforeach;?>
+						</select>
+						<a href="#team-<?php echo $non_member['id']?>" class="team_add"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
+					</div>
+				</div>
+			<?php endforeach;?>
+		</div>
+<?php endif;?>
 	</div>
 </div>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
@@ -110,6 +159,35 @@
 				},
 				success: function (data) {
 					data
+				}
+			});
+
+	});
+
+	$(".team_add").on('click',function(event)
+	{
+		event.preventDefault();
+		var link = $(this);
+		var select = $(link.attr('href'));
+		var team_id = select.find(":selected").val();
+		var member_id = select.data("member-id");
+
+		$.ajax({
+				url: '<?php echo Asset::create_url("TeamMember","post")?>.json',
+				type: 'post',
+				data: {
+					'team_id': team_id,
+					'member_id': member_id,
+					"team_member_type_id": 3
+				},
+				dataType:'json',
+				success: function (data) {
+
+					if(data.success)
+					{
+						select.parent().parent().remove()
+
+					}
 				}
 			});
 

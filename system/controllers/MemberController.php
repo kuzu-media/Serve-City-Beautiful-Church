@@ -12,7 +12,7 @@
  */
  Class MemberController extends Controller
 {
-	public static $allowed_actions = array("logout","login","post");
+	public static $allowed_actions = array("logout","login","post","forgot","reset");
 
 
 	/**
@@ -46,6 +46,7 @@
 
 		}
 	}
+
 	/**
 	 * Get one Member
 	 * @param  int the id of the Member to get
@@ -363,6 +364,90 @@
 		// set for the view
 		$this->view_data("login_url",$url);
 	}
+
+	public function forgot($member=NULL)
+	{
+		if($member && $member['email'])
+		{
+
+			$this->loadModel('Member');
+
+			$this->Member->options['fields'] = array("Member"=>array("id","name"));
+			$this->Member->options['recursive'] = 0;
+
+			$returned_member = $this->Member->findByEmail($member['email']);
+
+			if($this->Member->success && isset($returned_member[0]))
+			{
+				$id = $returned_member[0]['id']."f".$this->_random_string(20);
+				$url = Asset::create_url("member","reset",array($id));
+				$message = "Hello ".$returned_member[0]['name']."\n\n\nYou have requested a new password. To reset your password go to: ".$url."\n\nThanks!\nCity Beautiful Church";
+				mail($member['email'], "Reset Your Password", $message,"From: serve@citybeautifulchurch.com");
+			}
+			else
+			{
+				$this->view_data("fields",array("email"=>"This email in not signed up."));
+			}
+
+		}
+
+	}
+
+	public function reset($id, $member=NULL)
+	{
+
+		$id = preg_split("/f/",  $id);
+
+		$id = $id[0];
+
+		if($member)
+		{
+
+			$member['id'] = $id;
+
+			$this->loadModel('Member');
+
+			$this->Member->options['returnSaved'] = true;
+
+			// save the new Member
+			$member = $this->Member->save($member);
+
+			// if the save was successful
+			if($this->Member->success)
+			{
+
+				unset($member['password']);
+
+				// set the session user
+				Session::set('user',$member);
+
+				// set that the user is logged in
+				Session::set('logged_in',true);
+
+				// go back to the calender
+				Core::redirect("date","index");
+
+				// return the success
+				return $this->Member->success;
+			}
+			// if save was unsuccessful
+			else
+			{
+
+				// set the errors
+				$this->view_data("errors",$this->Member->error);
+
+				// set the member
+				$this->view_data("member",$member);
+			}
+
+		}
+
+
+
+
+	}
+
 	public function logout()
 	{
 		// log the user out
@@ -400,6 +485,15 @@
 
 	}
 
+	private function _random_string($length, $charset='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789')
+	{
+	    $str = '';
+	    $count = strlen($charset);
+	    while ($length--) {
+	        $str .= $charset[mt_rand(0, $count-1)];
+	    }
+	    return $str;
+	}
 	private function _set_teams($member)
 	{
 		// if there are teams

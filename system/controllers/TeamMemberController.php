@@ -228,6 +228,8 @@
 
 		$this->view_data('date',$info['date']);
 
+		return array("recommened"=>$rec,"serving"=>$serving,"sunday"=>$sunday,"max"=>$max,"archived"=>$archived);
+
 	}
 
 	private function _get_recommended($info)

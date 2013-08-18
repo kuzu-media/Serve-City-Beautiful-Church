@@ -2,6 +2,8 @@
 Class Shift extends Model
 {
 
+	public $soft_delete = false;
+
 	public $belongsTo = array('Date','Team');
 
 	public $hasMany = array('ShiftMember');

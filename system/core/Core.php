@@ -153,11 +153,10 @@ Class Core {
 	}
 
 	/**
-	 * Run the framework.
+	 * Load all the extension bootstrap files
 	 */
-	public static function run()
+	public static function run_extenstions()
 	{
-
 		// so we can instatinate
 		foreach(self::$extensions as $folder) {
 
@@ -165,6 +164,14 @@ Class Core {
 			include SYSTEM_PATH."/extensions/$folder/bootstrap.php";
 
 		}
+	}
+	/**
+	 * Run the framework.
+	 */
+	public static function run()
+	{
+
+		self::run_extenstions();
 
 		// get all the information
 		self::_get_url();

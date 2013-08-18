@@ -237,6 +237,7 @@
 	 * @return array all the Teams
 	 */
 	public function admin(){
+
 		// load the model
 		$this->loadModel("TeamMember");
 
@@ -248,6 +249,34 @@
 
 		//set the success
 		$this->view_data('success',$this->TeamMember->success);
+
+		$this->loadModel("Member");
+
+		$this->Member->options['recursive'] = 0;
+
+		$this->Member->options['where'] = array("Member.id NOT IN (SELECT member_id from team_member )");
+
+		$members = $this->Member->findAll();
+
+		if($this->Member->success)
+		{
+			$this->view_data("non_team_members",$members);
+		}
+
+		// load the team model
+		$this->loadModel("Team");
+
+		// on get this table
+		$this->Team->options['recursive'] = 0;
+
+		// only get the id and name
+		$this->Team->options['fields'] = array("Team"=>array("id","name"));
+
+		// get all of them
+		$team_names = $this->Team->findAll();
+
+		// set the teams for the view
+		$this->view_data("team_names",$team_names);
 
 		// if the call was successful
 		if($this->TeamMember->success)

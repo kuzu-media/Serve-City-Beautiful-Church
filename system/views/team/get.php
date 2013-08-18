@@ -9,7 +9,7 @@
 		<h1><?php echo $team['name']?></h1>
 		<!-- <iframe width="560" height="315" src="<?php echo $team['video']?>" frameborder="0" allowfullscreen></iframe> -->
 		<div class="row"><?php echo Asset::img($team['photo']);?></div>
-		<p><?php echo $team['content']?></p>
+		<p><?php echo preg_replace( "/\n/", "<br />", $team['content']);?></p>
 	</div>
 </div>
 <?php if($testimonials): ?>

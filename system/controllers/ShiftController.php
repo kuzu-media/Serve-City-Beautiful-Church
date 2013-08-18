@@ -106,22 +106,19 @@
 	public function post($shift=NULL)
 	{
 
-		$this->loadModel("Team");
-		$this->Team->options['recursive'] = 0;
-		$this->Team->options['fields'] = array("Team"=>array("id","name"));
-		$teams = $this->Team->findAll();
-		$this->view_data("teams",$teams);
-
-		$this->loadModel("Date");
-		$this->Date->options['recursive'] = 0;
-		$this->Date->options['fields'] = array("Date"=>array("id","date"));
-		$this->Date->options['where'] = array("Date.date > '".Date("m/d/y",strtotime("last sunday"))."'");
-		$dates = $this->Date->findAll();
-		$this->view_data("dates",$dates);
-
 		//if information was sent
 		if($shift)
 		{
+
+			if(isset($shift['shift_id']) && $shift['shift_id'])
+			{
+				$shift['id'] = $shift['shift_id'];
+				unset($shift['shift_id']);
+			}
+			else if(isset($shift['shift_id']))
+			{
+				unset($shift['shift_id']);
+			}
 			// load the model
 			$this->loadModel("Shift");
 
