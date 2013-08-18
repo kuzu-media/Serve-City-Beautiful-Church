@@ -123,17 +123,7 @@
 		}
 		if(!$facebook_id)
 		{
-			// set up the facebook controller
-			$facebook = Core::instantiate("FacebookAPIController");
-
-			// the url to go after login
-			$redirect_uri = Asset::create_url("facebook","login");
-
-			// the login url
-			$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
-
-			// set for the view
-			$this->view_data("login_url",$url);
+			$this->_facebook_login_url();
 		}
 
 		// get the teams
@@ -283,6 +273,8 @@
 			// get a Member
 			$this->get($member_id);
 
+			$this->_facebook_login_url();
+
 		}
 
 
@@ -352,17 +344,7 @@
 			}
 		}
 
-		// set up the facebook controller
-		$facebook = Core::instantiate("FacebookAPIController");
-
-		// the url to go after login
-		$redirect_uri = Asset::create_url("facebook","login");
-
-		// the login url
-		$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
-
-		// set for the view
-		$this->view_data("login_url",$url);
+		$this->_facebook_login_url();
 	}
 
 	public function forgot($member=NULL)
@@ -464,6 +446,21 @@
 
 		header("Location: ".$url);
 
+	}
+
+	private function _facebook_login_url()
+	{
+		// set up the facebook controller
+		$facebook = Core::instantiate("FacebookAPIController");
+
+		// the url to go after login
+		$redirect_uri = Asset::create_url("facebook","login");
+
+		// the login url
+		$url = $facebook->getLoginUrl(array("scope"=>"email,user_groups","redirect_uri"=>$redirect_uri));;
+
+		// set for the view
+		$this->view_data("login_url",$url);
 	}
 
 	private function _get_teams()
