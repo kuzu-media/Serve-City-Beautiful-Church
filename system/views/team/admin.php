@@ -33,11 +33,6 @@
 				<div class="row">
 					<div class="cols">
 					<?php
-						$current = false;
-						if($team_member['Member']['id'] === Auth::user('id'))
-						{
-							$current= true;
-						}
 						if($team_member['Member']['facebook_id'])
 						{
 							$opening_tag = "<a href='http://facebook.com/".$team_member['Member']['facebook_id']."' class='name'>";
@@ -85,11 +80,6 @@
 				<div class="row">
 					<div class="cols">
 						<?php
-							$current = false;
-							if($non_member['id'] === Auth::user('id'))
-							{
-								$current= true;
-							}
 							if($non_member['facebook_id'])
 							{
 								$opening_tag = "<a href='http://facebook.com/".$non_member['facebook_id']."' class='name'>";
@@ -116,6 +106,7 @@
 						</select>
 						<a href="#team-<?php echo $non_member['id']?>" class="team_add"><?php echo Asset::img("save.png",array("alt"=>"Save","height"=>15)) ?></a>
 					</div>
+					<div
 				</div>
 			<?php endforeach;?>
 		</div>

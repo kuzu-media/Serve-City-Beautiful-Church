@@ -14,6 +14,22 @@
 {
 	public static $allowed_actions = array("logout","login","post","forgot","reset");
 
+	public function before_action()
+	{
+
+		parent::before_action();
+
+		$url = Core::$info_of_url;
+
+		// if the user isn't an admin they can't see the admin action
+		if(Auth::user("member_type_id") === "2" && (Core::$info_of_url['action'] === "index" || Core::$info_of_url['action'] === "update_admin") )
+		{
+
+			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);
+
+		}
+	}
+
 
 	/**
 	 * Get all the Members
@@ -28,6 +44,9 @@
 		// only get this table
 		$this->Member->options['recursive'] = 0;
 
+		// get all non system admins
+		$this->Member->options['where'] = array("Member.member_type_id != 3");
+
 		// get all the Members
 		$members = $this->Member->findAll();
 
@@ -41,9 +60,69 @@
 			// set the information for the view
 			$this->view_data("members",$members);
 
+			// only get this table
+			$this->Member->options['recursive'] = 0;
+
+			// get all non system admins
+			$this->Member->options['where'] = array("Member.member_type_id = 3");
+
+			// get all the Members
+			$system_admins = $this->Member->findAll();
+
+			if($this->Member->success)
+			{
+				// set the information for the view
+				$this->view_data("system_admins",$system_admins);
+			}
+
 			// return the information
 			return $members;
 
+		}
+	}
+
+	public function update_admin($member_type, $member_id)
+	{
+		if($member_type && $member_type === "3")
+		{
+			$this->loadModel("Member");
+
+			if(is_array($member_id))
+			{
+				$member_id = $member_id['member_id'];
+			}
+
+			$this->Member->save(array("id"=>$member_id, "member_type_id"=>$member_type));
+
+			header("Location: ".$_SERVER['HTTP_REFERER']);
+
+		}
+		if($member_type && $member_type === "1")
+		{
+			$this->loadModel("TeamMember");
+
+			$this->options['recursive'] = 0;
+
+			// find out if this user is a team leader
+			$this->TeamMember->findByMemberIdAndTeamMemberTypeId($member_id,4);
+
+			$this->loadModel("Member");
+
+			// if we found this member to be a team leader
+			if($this->TeamMember->success)
+			{
+
+				// save them as a team leader
+				$this->Member->save(array("id"=>$member_id, "member_type_id"=>1));
+
+			}
+			else
+			{
+				// save them as a member
+				$this->Member->save(array("id"=>$member_id, "member_type_id"=>2));
+			}
+
+			header("Location: ".$_SERVER['HTTP_REFERER']);
 		}
 	}
 
