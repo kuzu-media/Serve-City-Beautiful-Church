@@ -424,7 +424,7 @@ Class ORM extends Database {
 		if($valid === true) {
 
 			// run the before save function
-			if(Hook::call("before_save", array(&$this->_data)) === false) return;
+			if(Hook::call("before_save", array(&$this->_data,&$this)) === false) return;
 
 			// set the database name
 			$dbName = Core::to_db($this->_name);
@@ -826,24 +826,31 @@ Class ORM extends Database {
 			// set the tables and their database names
 			$table1 = $tables[0];
 			$table2 = $tables[1];
-			$direction = isset($tables[2])?$tables[2]:"LEFT";
-			$belongsTo = isset($tables[3])?$tables[3]:false;
+			// defaults
+			$direction = "LEFT";
+			$ManyToMany = false;
+
+			// override
+			if(isset($tables[2]) && is_string($tables[2])) $direction = $tables[2];
+			elseif(isset($tables[2]) && is_bool($tables[2])) $ManyToMany = $tables[2];
+
+			if(isset($tables[3]) && is_string($tables[3])) $direction = $tables[3];
+			elseif(isset($tables[3]) && is_bool($tables[3])) $ManyToMany = $tables[3];
+
 			$dbTable1 = Core::to_db($table1);
 			$dbTable2 = Core::to_db($table2);
-
 
 			if(!in_array($table1, $this->hasMany) && $table1 != $this->_name)
 			{
 				array_push($this->hasMany, $table1);
 			}
-
-			if($belongsTo && (!in_array($table2, $this->belongsTo) && $table2 != $this->_name))
-			{
-				array_push($this->hasMany, $table2);
-			}
-			else if(!in_array($table2, $this->belongsTo))
+			if(!in_array($table2, $this->belongsTo) && !$ManyToMany)
 			{
 				array_push($this->belongsTo, $table2);
+			}
+			else if(!in_array($table2, $this->hasMany) && $ManyToMany)
+			{
+				array_push($this->hasMany, $table2);
 			}
 
 			// if the alias is already created then use the other table

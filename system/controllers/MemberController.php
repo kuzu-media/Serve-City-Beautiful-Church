@@ -547,14 +547,8 @@
 		// load the team model
 		$this->loadModel("Team");
 
-		// on get this table
-		$this->Team->options['recursive'] = 0;
-
-		// only get the id and name
-		$this->Team->options['fields'] = array("Team"=>array("id","name"));
-
 		// get all of them
-		$team_names = $this->Team->findAll();
+		$team_names = $this->Team->get_team_names();
 
 		// set the teams for the view
 		$this->view_data("team_names",$team_names);

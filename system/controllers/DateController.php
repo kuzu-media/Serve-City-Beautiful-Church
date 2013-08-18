@@ -90,10 +90,10 @@
 			}
 
 			// get the team controller
-			$team_controller = Core::instantiate("TeamController");
+			$this->loadModel("Team");
 
 			// get all the teams
-			$teams = $team_controller->index();
+			$teams = $this->Team->get_team_names();
 
 			// set the teams for the view
 			$this->view_data("teams",$teams);

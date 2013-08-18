@@ -46,7 +46,7 @@
 		$this->Team->options['recursive'] = 0;
 
 		// get all the Teams
-		$teams = $this->Team->findAll();
+		$teams = $this->Team->findByTeamTypeId(1);
 
 		//set the success
 		$this->view_data('success',$this->Team->success);
@@ -236,58 +236,81 @@
 	 * Admin page
 	 * @return array all the Teams
 	 */
-	public function admin(){
-
-		// load the model
-		$this->loadModel("TeamMember");
-
-		// order by the team
-		$this->TeamMember->options['orderBy'] = array("TeamMember","team_id","ASC, TeamMemberType.id ASC");
-
-		// get all the Teams
-		$team_members = $this->TeamMember->findAll();
-
-		//set the success
-		$this->view_data('success',$this->TeamMember->success);
-
-		$this->loadModel("Member");
-
-		$this->Member->options['recursive'] = 0;
-
-		$this->Member->options['where'] = array("Member.id NOT IN (SELECT member_id from team_member )");
-
-		$members = $this->Member->findAll();
-
-		if($this->Member->success)
-		{
-			$this->view_data("non_team_members",$members);
-		}
+	public function admin()
+	{
 
 		// load the team model
 		$this->loadModel("Team");
 
-		// on get this table
-		$this->Team->options['recursive'] = 0;
+		// get the team names
+		$team_names = $this->Team->get_team_names();
 
-		// only get the id and name
-		$this->Team->options['fields'] = array("Team"=>array("id","name"));
+		$ids = $this->Team->get_team_names();
 
-		// get all of them
-		$team_names = $this->Team->findAll();
 
-		// set the teams for the view
-		$this->view_data("team_names",$team_names);
+		$this->Team->hasMany = array();
+		$this->Team->options['fields'] = array(
+				"Team"=>array("id","name","team_type_id"),
+				"Member"=>array("id","facebook_id","profile_pic","name","email","phone"),
+				"TeamMember"=>array("id","team_member_type_id")
+		);
+		// order by the team
+		$this->Team->options['orderBy'] = array("Team","id","ASC, IFNULL(TeamMember.team_member_type_id,100), TeamMember.team_member_type_id DESC");
+
+		$this->Team->options['where'] = array("Team.id IN (".$this->Team->team_ids($team_names).")");
+		$this->Team->options['joins'] = array(array("TeamMember","Team"),array('TeamMember','Member',true));
+
+		$teams = $this->Team->findAll();
+
+		//set the success
+		$this->view_data('success',$this->Team->success);
 
 		// if the call was successful
-		if($this->TeamMember->success)
+		if($this->Team->success)
 		{
 			// set the information for the view
-			$this->view_data("team_members",$team_members);
+			$this->view_data("teams",$teams);
+
+			// set the teams for the view
+			$this->view_data("team_names",$team_names);
+
+
+			$this->loadModel("Member");
+
+			$this->Member->options['recursive'] = 0;
+			$this->Member->options['fields'] = array("Member"=>array("id","name"));
+
+			$members = $this->Member->findAll();
+
+			if($this->Member->success)
+			{
+				$this->view_data("members",$members);
+			}
+
+			// if system admin
+			if(Auth::user('member_type_id') === "3")
+			{
+				// get all the members that aren't part of team
+				$this->Member->options['recursive'] = 0;
+
+				$this->Member->options['where'] = array("Member.id NOT IN (SELECT member_id from team_member )");
+
+				$members = $this->Member->findAll();
+
+				if($this->Member->success)
+				{
+					$this->view_data("non_team_members",$members);
+				}
+
+				array_push($team_names, array("id"=>"none","name"=>"Members Not On a Team"));
+			}
 
 			// return the information
-			return $team_members;
+			return $teams;
 
 		}
+
+
 
 	}
 }
