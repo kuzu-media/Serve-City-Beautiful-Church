@@ -46,6 +46,7 @@
 
 		// get all non system admins
 		$this->Member->options['where'] = array("Member.member_type_id != 3");
+		$this->Member->options['orderBy'] = array("Member","name","ASC");
 
 		// get all the Members
 		$members = $this->Member->findAll();

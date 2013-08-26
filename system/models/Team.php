@@ -38,7 +38,7 @@ Class Team extends Model
 			// get the hidden teams
 			$hidden_teams = $this->findByTeamTypeId(2);
 
-			$team_names = array_merge($team_names, $hidden_teams);
+			if($hidden_teams) $team_names = array_merge($team_names, $hidden_teams);
 		}
 		else{
 

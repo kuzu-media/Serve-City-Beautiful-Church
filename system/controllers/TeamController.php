@@ -279,7 +279,7 @@
 
 			$this->Member->options['recursive'] = 0;
 			$this->Member->options['fields'] = array("Member"=>array("id","name"));
-
+			$this->Member->options['orderBy'] = array("Member","name","ASC");
 			$members = $this->Member->findAll();
 
 			if($this->Member->success)
