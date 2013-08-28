@@ -309,8 +309,63 @@
 			return $teams;
 
 		}
+	}
+
+	public function email($email=NULL)
+	{
+		// load the team model
+		$this->loadModel("Team");
+
+		// get the team names
+		$team_names = $this->Team->get_team_names();
 
 
+		// set the teams for the view
+		$this->view_data("team_names",$team_names);
+
+		if($email)
+		{
+			if($email['team'] === 'all')
+			{
+				$this->loadModel('Member');
+
+				$this->Member->options['recursive'] = 1;
+
+				$this->Member->belongsTo = array();
+
+				$this->Member->options['fields'] = array("Member"=>array("id","email"));
+
+				$members = $this->Member->findAll();
+
+			}
+			else if($email['team'] === "leads")
+			{
+				$this->loadModel('Member');
+
+				$this->Member->options['recursive'] = 1;
+
+				$this->Member->belongsTo = array();
+
+				$this->Member->options['fields'] = array("Member"=>array("id","email"));
+
+				$this->Member->options['where'] = array("Member.member_type_id IN (1,3)");
+
+				$members = $this->Member->findAll();
+
+			}
+			else
+			{
+				$team_member_controller = Core::instantiate("TeamMemberController");
+
+				$members = $team_member_controller->get($email["team"]);
+			}
+
+			foreach($members as $member)
+			{
+				mail($member['Member']['email'],$email['subject'],$email['message'],"From: serve@citybeautifulchurch.com");
+			}
+		}
 
 	}
+
 }

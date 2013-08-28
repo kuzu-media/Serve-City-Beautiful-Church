@@ -65,11 +65,17 @@
 			// load the model
 			$this->loadModel("TeamMember");
 
+			// only ge the member table
+			$this->TeamMember->belongsTo = array("Member");
+
 			// only get this table
-			$this->TeamMember->options['recursive'] = 0;
+			$this->TeamMember->options['recursive'] = 1;
+
+			$this->TeamMember->options['fields'] = array("TeamMember"=>array("id"),"Member"=>array("id","email"));
 
 			// get all the TeamMembers
-			$team_member = $this->TeamMember->findById($id);
+			$team_members = $this->TeamMember->findByTeamId($id);
+
 
 			//set the success
 			$this->view_data('success',$this->TeamMember->success);
@@ -79,10 +85,10 @@
 			{
 
 				// set the information for the view
-				$this->view_data("team_member",$team_member[0]);
+				$this->view_data("team_members",$team_members);
 
 				// return the information
-				return $team_member[0];
+				return $team_members;
 			}
 			return false;
 		}

@@ -28,6 +28,7 @@
 				<a href="<?php echo Asset::create_url("date","index")?>">Calendar</a>
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 					<a href="<?php echo Asset::create_url('team','admin')?>">Teams</a>
+					<a href="<?php echo Asset::create_url('team','email')?>">Send Email</a>
 					<a href="<?php echo Asset::create_url('pages','help')?>">Help</a>
 				<?php endif;?>
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "3"): ?>
