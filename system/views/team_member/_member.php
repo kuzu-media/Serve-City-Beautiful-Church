@@ -34,4 +34,15 @@
 		</div>
 	<?php endif; ?>
 
+
+	<div class="cols">
+		<?php if(!isset($ShiftMember) || $ShiftMember < 3):?>
+			<a href="<?php echo Asset::create_url('ShiftMember','request')?>" data-member-name="<?= $Member['name'];?>" data-member-id="<?= $Member['id']?>" data-member-email="<?= $Member['email']?>" class="button request">Invite to Serve</a>
+		<?php elseif($ShiftMember['shift_member_type_id'] === "3"):?>
+			<span class="button inactive">Pending</span>
+		<?php elseif($ShiftMember['shift_member_type_id'] === "4"):?>
+			<span class="button inactive">Declined</span>
+		<?php endif;?>
+	</div>
+
 </div>

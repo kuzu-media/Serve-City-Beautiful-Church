@@ -35,11 +35,14 @@
 					<?php $shift_count = 0; if($date['Shift']): foreach($date['Shift'] as $shift) :?>
 						<?php if($shift['team_id'] === $team['id']):?>
 							<div class="shift">
-								<p class="time"><span><?php echo $shift['time']?></span><?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
+
+								<p class="time"><span><?php echo $shift['time']?>
+								</span><?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
+
 								<?php if(!$past):?>
-								<?php if(!$shift['members']): ?><a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a><?php endif;?>
-								<a class='edit_opportunity tooltip' href="<?php echo Asset::create_url('shift','post')?>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>" data-shift-id="<?php echo $shift['id']?>"><?php echo Asset::img('edit.png') ?><span>Edit Opportunity</span></a>
-								<a class='check_availability tooltip' href="<?php echo Asset::create_url('TeamMember','available')?>" data-shift_id="<?php echo $shift['id']?>" data-team_id="<?php echo $team['id']?>" data-date_id="<?php echo $date['id']?>" data-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
+									<a class='edit_opportunity tooltip' href="<?php echo Asset::create_url('shift','post')?>" data-team-id="<?php echo $team['id']?>" data-date-id="<?php echo $date['id']?>" data-date-date="<?php echo $date['date']?>" data-team-name="<?php echo $team['name']?>" data-shift-id="<?php echo $shift['id']?>"><?php echo Asset::img('edit.png') ?><span>Edit Opportunity</span></a>
+									<?php if(!$shift['members']): ?><a class='remove tooltip' href="<?php echo Asset::create_url('shift','delete',array($shift['id']))?>>" >x<span class="">Remove Opportunity</span></a><?php endif;?>
+								<a class='check_availability tooltip' href="<?php echo Asset::create_url('TeamMember','available')?>" data-shift_id="<?php echo $shift['id']?>" data-team_id="<?php echo $team['id']?>" data-date_id="<?php echo $date['id']?>" data-date="<?php echo $date['date']?>" data-time="<?php echo $shift['time']?>" data-team-name="<?php echo $team['name']?>">&#10003;<span>Check Availability</span></a>
 								<?php endif;?>
 							<?php endif;?></p>
 								<?php if($shift['notes']):?><p class="notes"><?php echo $shift['notes'] ?></p><?php endif;?>
@@ -111,7 +114,7 @@ jQuery(document).ready(function($) {
 					name.append("<a href='"+link+"' class='cancel tooltip'>x<span>Cancel Opportunity</span></a>");
 					var div = $("<div>").addClass("name").append(img).append(name);
 
-					button.replaceWith(div);
+					button.addClass("inactive").before(div);
 				}
 			});
 		}
@@ -146,6 +149,21 @@ jQuery(document).ready(function($) {
 					success: function (data) {
 						var modal = $(data);
 						modal.appendTo("body").modal();
+
+						modal.find('.request').on('click',function(e)
+						{
+
+							var link = $(this);
+							$.ajax({
+									url: link.attr('href'),
+									type: 'post',
+									data: $.extend(modal.data(),link.data()),
+									success: function (data) {
+
+									}
+								});
+							e.preventDefault();
+						})
 					}
 				});
 	});

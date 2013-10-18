@@ -5,7 +5,6 @@
 	<title>Serve | City Beautiful Church</title>
 	<?php echo Asset::css("style") ?>
 	<link href='http://fonts.googleapis.com/css?family=Arvo:400,700,400italic,700italic|Oswald:400,300,700' rel='stylesheet' type='text/css'>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 </head>
 <body>

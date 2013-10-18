@@ -1,5 +1,19 @@
-<div class="modal" id="availability">
-	<div class="row"><h1>Availability on <?= $date ?></h1></div>
+<div class="modal" id="availability" data-shift-id="<?= $shift_id?>" data-shift-date="<?= $date?>" data-team-name="<?=$teamName?>" data-shift-time="<?= $time ?>">
+	<div class="row"><h1>Availability on <?= $date ?> - <?= $time ?></h1></div>
+	<?php if(isset($pending) && $pending): ?>
+		<h3>Pending Invites</h3>
+		<div class="table">
+			<?php View::render('team_member/_title')?>
+			<?php View::render('team_member/_member',$pending) ?>
+		</div>
+	<?php endif;?>
+	<?php if(isset($declined) && $declined): ?>
+		<h3>Declined Invites</h3>
+		<div class="table">
+			<?php View::render('team_member/_title')?>
+			<?php View::render('team_member/_member',$declined) ?>
+		</div>
+	<?php endif;?>
 	<h3>Recommended</h3>
 	<?php if(isset($recommened) && $recommened): ?>
 		<div class="table">
@@ -37,6 +51,4 @@
 			<?php View::render('team_member/_member',$archived) ?>
 		</div>
 	<?php endif;?>
-
-
 </div>

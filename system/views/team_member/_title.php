@@ -5,4 +5,5 @@
 	<?php if(isset($opportunities) && $opportunities): ?>
 	<div class="cols title"><h2>Opportunity(s)</h2></div>
 	<?php endif?>
+	<div class="cols title"><h2>Invite</h2></div>
 </div>

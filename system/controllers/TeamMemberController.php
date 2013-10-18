@@ -212,27 +212,50 @@
 
 		$this->loadModel('TeamMember');
 
+		// recommended membrs
 		$rec = $this->_get_recommended($info);
 
 		$this->view_data('recommened', $rec);
 
+		// members who are already serving
 		$serving = $this->_get_serving($info);
 
 		$this->view_data('serving',$serving);
 
+		// members who don't like this sunday
 		$sunday = $this->_get_sunday($info);
 
 		$this->view_data('sunday',$sunday);
 
+		// members who have reached there max number of sundays
 		$max = $this->_get_max($info);
 
 		$this->view_data('max',$max);
 
+		// members who have been archived
 		$archived = $this->_get_archived($info);
 
 		$this->view_data('archived',$archived);
 
+		// members who have invitations are pending
+		$pending = $this->_get_pending($info);
+
+		$this->view_data("pending",$pending);
+
+
+		// members who have invitations are declined
+		$declined = $this->_get_declined($info);
+
+		$this->view_data("declined",$declined);
+
+		// set the information of this shift
 		$this->view_data('date',$info['date']);
+
+		$this->view_data('shift_id',$info['shift_id']);
+
+		$this->view_data('teamName',$info['teamName']);
+
+		$this->view_data('time',$info['time']);
 
 		return array("recommened"=>$rec,"serving"=>$serving,"sunday"=>$sunday,"max"=>$max,"archived"=>$archived);
 
@@ -245,10 +268,10 @@
 		$this->TeamMember->belongsTo = array("Member");
 		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
 		$this->TeamMember->options['where'] = array(
-			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."' AND shift_member.shift_member_type_id <> 4) dates  WHERE dates.member_id = TeamMember.member_id)",
 			"MemberWeek.week_id in (".$info['week_id'].",6)",
 			"TeamMember.team_member_type_id !=  4",
-			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']."  AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
 
@@ -269,11 +292,10 @@
 		$this->TeamMember->options['where'] = array(
 			"MemberWeek.week_id in (".$info['week_id'].",6)",
 			"TeamMember.team_member_type_id !=  4",
-			"TeamMember.member_id IN ( SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.member_id NOT IN (SELECT member_id from shift_member WHERE shift_member.shift_id = ".$info['shift_id']."))",
+			"TeamMember.member_id IN ( SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.member_id NOT IN (SELECT member_id from shift_member WHERE shift_member.shift_id = ".$info['shift_id'].") AND shift_member.shift_member_type_id <> 4)",
 			"date_id"=>array($info['date_id'],"Shift")
 		);
 		$this->TeamMember->options['key'] = array("Team"=>"id");
-
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 
@@ -289,10 +311,10 @@
 		$this->TeamMember->belongsTo = array("Member");
 		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
 		$this->TeamMember->options['where'] = array(
-			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"Member.times > (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."' AND shift_member.shift_member_type_id <> 4) dates  WHERE dates.member_id = TeamMember.member_id)",
 			"TeamMember.member_id NOT IN (SELECT member_id from member_week WHERE member_week.member_id = TeamMember.member_id AND member_week.week_id IN (".$info['week_id'].",6))",
 			"TeamMember.team_member_type_id !=  4",
-			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
 
@@ -310,10 +332,10 @@
 		$this->TeamMember->belongsTo = array("Member");
 		$this->TeamMember->options['joins'] = array(array("MemberWeek","Member"));
 		$this->TeamMember->options['where'] = array(
-			"Member.times <= (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."') dates  WHERE dates.member_id = TeamMember.member_id)",
+			"Member.times <= (SELECT COUNT(*) from (SELECT DISTINCT shift_member.member_id, date.id from shift_member JOIN shift on shift.id = shift_member.shift_id JOIN date on date.id = shift.date_id WHERE date.date BETWEEN '".$info['start_date']."' AND '".$info['end_date']."' AND shift_member.shift_member_type_id <> 4) dates  WHERE dates.member_id = TeamMember.member_id)",
 			"MemberWeek.week_id IN (".$info['week_id'].",6)",
 			"TeamMember.team_member_type_id !=  4",
-			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id'].")"
+			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
 
@@ -335,6 +357,34 @@
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
+
+		if($members) return $members;
+
+		return false;
+
+	}
+
+	private function _get_pending($info)
+	{
+		$this->loadModel("ShiftMember");
+		$this->ShiftMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),"ShiftMember"=>array("id","shift_member_type_id"));
+		$this->ShiftMember->options['recursive'] = 1;
+		$this->ShiftMember->belongsTo = array("Member");
+		$members = $this->ShiftMember->findByShiftIdAndShiftMemberTypeId($info['shift_id'],3);
+
+		if($members) return $members;
+
+		return false;
+
+	}
+
+	private function _get_declined($info)
+	{
+		$this->loadModel("ShiftMember");
+		$this->ShiftMember->options['fields'] = array("Member"=>array("id","name","email","phone","profile_pic","times","facebook_id"),"ShiftMember"=>array("id","shift_member_type_id"));
+		$this->ShiftMember->options['recursive'] = 1;
+		$this->ShiftMember->belongsTo = array("Member");
+		$members = $this->ShiftMember->findByShiftIdAndShiftMemberTypeId($info['shift_id'],4);
 
 		if($members) return $members;
 

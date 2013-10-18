@@ -1,7 +1,7 @@
 <?php
 
 define("SYSTEM_PATH", "../../serve_cbc/");
-//define("SYSTEM_PATH","../system/");
+// define("SYSTEM_PATH","../system/");
 
 include(SYSTEM_PATH."core/Core.php");
 include(SYSTEM_PATH."Settings.php");
@@ -199,6 +199,39 @@ if($today ===  "3")
 		}
 
 	}
+
+}
+
+if(date("j") === "20")
+{
+
+	function send_email()
+	{
+		$requests = Core::instantiate('Request');
+
+		$requests->options['where'] = array("Request.member_id = (SELECT member_id from request ORDER BY member_id LIMIT 1)");
+
+		$member = $requests->findAll();
+
+		if($requests->success)
+		{
+			$email_info = array("name"=>$member[0]['Request']['name']);
+			$email_info['shifts'] = $member;
+
+			// send the email
+			mail($member[0]['Request']['email'], "You have been invited to serve!", View::render('emails/request',$email_info,array("render"=>false)),'MIME-Version: 1.0' . "\r\n".'Content-type: text/html; charset=iso-8859-1' . "\r\nFrom: serve@citybeautifulchurch.com");
+
+			foreach($member as $member_delete)
+			{
+				$requests->delete($member_delete['Request']['id']);
+			}
+
+			send_email();
+		}
+	}
+
+	send_email();
+
 
 }
 

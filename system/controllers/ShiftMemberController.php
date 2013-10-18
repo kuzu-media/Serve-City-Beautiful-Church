@@ -64,6 +64,9 @@
 			// get the belongs to
 			$this->ShiftMember->options['recursive'] = 3;
 
+			// don't get the requested or declined members
+			$this->ShiftMember->options['where'] = array("ShiftMember.shift_member_type_id NOT IN (3,4)");
+
 			// get all the ShiftMembers
 			$shift_member = $this->ShiftMember->findByShiftId($id);
 
@@ -194,8 +197,36 @@
 			// set the member
 			if($this->Member->success) $this->view_data("member",$member[0]);
 
-			// set the errors
-			if(!$this->ShiftMember->success) $this->view_data("errors",$this->ShiftMember->error);
+			if(!$this->ShiftMember->success)
+			{
+				// set the errors
+				$this->view_data("errors",$this->ShiftMember->error);
+
+				// if this member already exists for this shift
+				if(stripos($this->ShiftMember->error['msg'],'Duplicate') >= 0)
+				{
+					// get the id of the shift member
+					$this->ShiftMember->options['recursive'] = 0;
+					$this->ShiftMember->options['fields'] = array("ShiftMember"=>array("id"));
+					$member = $this->ShiftMember->findByShiftIdAndMemberId($shift_member['shift_id'],$shift_member['member_id']);
+
+					if($member && isset($member[0]['id']))
+					{
+						// set the id
+						$shift_member['id'] = $member[0]['id'];
+
+
+						// update the ShiftMember
+						$shift_id = $this->ShiftMember->save($shift_member);
+
+						// set the success
+						$this->view_data("success",$this->ShiftMember->success);
+
+					}
+
+
+				}
+			}
 
 			$this->view_data("shift_member_id",$shift_id);
 
@@ -268,6 +299,88 @@
 
 			header("Location: ".$_SERVER['HTTP_REFERER']);
 
+		}
+	}
+
+	public function request($info)
+	{
+
+
+		$save_data = array(
+			"shift_id"=>$info['shiftId'],
+			"member_id"=>$info['memberId'],
+			"shift_member_type_id"=>3);
+		$this->loadModel('ShiftMember');
+		$shift_member_id = $this->ShiftMember->save($save_data);
+
+		if($this->ShiftMember->success)
+		{
+
+			$today = date("d");
+
+			// if today is before the 20th of this month
+			if($today < 20)
+			{
+				$month = date("m");
+			}
+			// else the date is after the 20th
+			else
+			{
+				$month = date("m") + 1;
+				if($month == 13) $month = 1;
+			}
+
+			// creat the date
+			$str = $month."/20/".date("Y");
+			$compare_date = strtotime($str);
+
+			$serve_date = strtotime($info['shiftDate']);
+
+			$shift = array(
+					"team_name"=>$info['teamName'],
+					"date"=>$info['shiftDate'],
+					"time"=>$info['shiftTime'],
+					"member_id"=>$info['memberId'],
+					"shift_member_id"=>$shift_member_id );
+
+			// if the shift date is after the next 20th
+			if($serve_date >= $compare_date)
+			{
+				$this->loadModel("Request");
+
+				$shift['name'] = $info['memberName'];
+				$shift['email'] = $info['memberEmail'];
+
+				$this->Request->save($shift);
+
+			}
+			// if the shift date is before the next 20th
+			else
+			{
+				$email_info = array("name"=>$info['memberName']);
+				$email_info['shifts'] = array(array("Request"=>$shift));
+
+				// send the email
+				mail($info['memberEmail'], "You have been invited to serve!", View::render('emails/request',$email_info,array("render"=>false)),'MIME-Version: 1.0' . "\r\n".'Content-type: text/html; charset=iso-8859-1' . "\r\nFrom: serve@citybeautifulchurch.com");
+			}
+		}
+
+	}
+
+	public function invite($shift_member_id,$status)
+	{
+		$this->loadModel("ShiftMember");
+		if($status === "accept")
+		{
+			$this->ShiftMember->save(array("id"=>$shift_member_id,"shift_member_type_id"=>1));
+			$this->view_data("status","Accepted");
+			$this->view_data("msg","Thank you for choosing to accept our invitation to serve.<br /><br />To see more opportunities to serve <a href='".Asset::create_url('date','index')."'>click here</a>.");
+		}
+		else
+		{
+			$this->ShiftMember->save(array("id"=>$shift_member_id,"shift_member_type_id"=>4));
+			$this->view_data("status","Declined");
+			$this->view_data("msg","We're sorry you won't be able to serve on this date.<br /><br />To see more opportunities to serve <a href='".Asset::create_url('date','index')."'>click here</a>.");
 		}
 	}
 }
