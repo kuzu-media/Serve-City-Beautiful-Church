@@ -304,8 +304,6 @@
 
 	public function request($info)
 	{
-
-
 		$save_data = array(
 			"shift_id"=>$info['shiftId'],
 			"member_id"=>$info['memberId'],
@@ -364,6 +362,12 @@
 				mail($info['memberEmail'], "You have been invited to serve!", View::render('emails/request',$email_info,array("render"=>false)),'MIME-Version: 1.0' . "\r\n".'Content-type: text/html; charset=iso-8859-1' . "\r\nFrom: serve@citybeautifulchurch.com");
 			}
 		}
+
+		$team_member = Core::instantiate('TeamMemberController');
+		$team_member->available($info);
+		$this::$view_info = $team_member::$view_info;
+		View::render('team_member/available',$this::$view_info);
+
 
 	}
 

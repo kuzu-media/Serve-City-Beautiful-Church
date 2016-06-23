@@ -186,6 +186,22 @@
 
 	public function available($info)
 	{
+
+		// load the group model
+		$this->loadModel("Grouping");
+
+		// on get this table
+		$this->Grouping->options['recursive'] = 0;
+
+		// only get the id and name
+		$this->Grouping->options['fields'] = array("Grouping"=>array("id","name"));
+
+		// get the group names
+		$group_names = $this->Grouping->findAll();
+
+		// set the teams for the view
+		$this->view_data("group_names",$group_names);
+
 		$timestamp = strtotime($info['date']);
 
 		$info['start_date'] = date('m/01/y', $timestamp);
@@ -242,7 +258,6 @@
 
 		$this->view_data("pending",$pending);
 
-
 		// members who have invitations are declined
 		$declined = $this->_get_declined($info);
 
@@ -253,9 +268,17 @@
 
 		$this->view_data('shift_id',$info['shift_id']);
 
-		$this->view_data('teamName',$info['teamName']);
+		if(isset($info['team_name']))
+		{
+			$this->view_data('team_name',$info['team_name']);
+		}
 
 		$this->view_data('time',$info['time']);
+
+		if(isset($info['group']))
+		{
+			$this->view_data('current_group',$info['group']);
+		}
 
 		return array("recommened"=>$rec,"serving"=>$serving,"sunday"=>$sunday,"max"=>$max,"archived"=>$archived);
 
@@ -274,6 +297,11 @@
 			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']."  AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+		if(isset($info['group']))
+		{
+			array_push($this->TeamMember->options['joins'],array("GroupingMember","Member"));
+			array_push($this->TeamMember->options['where'], "GroupingMember.grouping_id = ".$info['group']);
+		}
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 
@@ -297,6 +325,12 @@
 		);
 		$this->TeamMember->options['key'] = array("Team"=>"id");
 
+		if(isset($info['group']))
+		{
+			array_push($this->TeamMember->options['joins'],array("GroupingMember","Member"));
+			array_push($this->TeamMember->options['where'], "GroupingMember.grouping_id = ".$info['group']);
+		}
+
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 
 		if($members) return $members;
@@ -317,6 +351,11 @@
 			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+		if(isset($info['group']))
+		{
+			array_push($this->TeamMember->options['joins'],array("GroupingMember","Member"));
+			array_push($this->TeamMember->options['where'], "GroupingMember.grouping_id = ".$info['group']);
+		}
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 
@@ -338,6 +377,11 @@
 			"TeamMember.member_id NOT IN (SELECT shift_member.member_id from shift_member JOIN shift on shift.id = shift_member.shift_id WHERE shift.date_id = ".$info['date_id']." AND shift_member.shift_member_type_id <> 4)"
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+		if(isset($info['group']))
+		{
+			array_push($this->TeamMember->options['joins'],array("GroupingMember","Member"));
+			array_push($this->TeamMember->options['where'], "GroupingMember.grouping_id = ".$info['group']);
+		}
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 
@@ -355,6 +399,11 @@
 			"TeamMember.team_member_type_id =  4",
 		);
 		$this->TeamMember->options['addToEnd'] = "GROUP BY TeamMember.id";
+		if(isset($info['group']))
+		{
+			array_push($this->TeamMember->options['joins'],array("GroupingMember","Member"));
+			array_push($this->TeamMember->options['where'], "GroupingMember.grouping_id = ".$info['group']);
+		}
 
 		$members = $this->TeamMember->findByTeamId($info['team_id']);
 

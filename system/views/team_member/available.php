@@ -1,5 +1,15 @@
 <div class="modal" id="availability" data-shift-id="<?= $shift_id?>" data-shift-date="<?= $date?>" data-team-name="<?=$teamName?>" data-shift-time="<?= $time ?>">
+	<a href="#close" class="close-modal">Close</a>
 	<div class="row"><h1>Availability on <?= $date ?> - <?= $time ?></h1></div>
+	<div>
+		<label for="group">Group:</label>
+		<select name="group" id="group">
+			<option value="none">None</option>
+			<?php foreach($group_names as $group): ?>
+			<option value="<?=$group['id']?>" <?php if(isset($current_group) && $current_group === $group['id']) echo "selected";?>><?=$group['name']?></option>
+			<?php endforeach;?>
+		</select>
+	</div>
 	<?php if(isset($pending) && $pending): ?>
 		<h3>Pending Invites</h3>
 		<div class="table">

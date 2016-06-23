@@ -6,7 +6,7 @@ Class Member extends Model
 
 	public $belongsTo = array('ReminderDay','AlertType','LoginType','MemberType');
 
-	public $hasMany = array('ShiftMember','TeamMember',"MemberWeek");
+	public $hasMany = array('ShiftMember','TeamMember',"MemberWeek","GroupingMember");
 
 	public $required = array('name','email','alert_type_id');
 

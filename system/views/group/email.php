@@ -3,16 +3,7 @@
 		<h1>Send Email</h1>
 		<p>Use this tool to easily send emails to everyone or just your team</p>
 
-		<form action="<?=$_SERVER['REQUEST_URI'] ?>" method="POST">
-			<div>
-				<label for="group">Group:</label>
-				<select name="group" id="group">
-					<option value="none">None</option>
-					<?php foreach($group_names as $group): ?>
-					<option value="<?=$group['id']?>"><?=$group['name']?></option>
-					<?php endforeach;?>
-				</select>
-			</div>
+		<form action="<?=$_SERVER['REQUEST_URI'] ?>">
 			<div>
 				<label for="team">To:</label>
 				<select name="team" id="team">

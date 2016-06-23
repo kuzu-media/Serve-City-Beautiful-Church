@@ -65,6 +65,22 @@ Class ORM extends Database {
 	 */
 	private $_data = array();
 
+		/**
+	 * _hasManyTables: array
+	 *
+	 * the tables that have many to this model
+	 * @var array
+	 */
+	private $_hasManyTables = array();
+
+		/**
+	 * _belongsToTables: array
+	 *
+	 * the tables that belong to this model
+	 * @var array
+	 */
+	private $_belongsToTables = array();
+
 	/**
 	 * This is called whenever a call is made on this model
 	 * @param  string $method the method that was called
@@ -137,6 +153,9 @@ Class ORM extends Database {
 
 		// clear all the hasManyTables
 		$this->_hasManyTables = array();
+
+		// clear all the belongsToTables
+		$this->_belongsToTables = array();
 
 		// return the response
 		return $response;
@@ -318,7 +337,7 @@ Class ORM extends Database {
 						}
 
 						// if the key is set or if it is a has many and set is turned on then add this info
-						if($current[$table]['set'] && ( isset($this->options['key'][$table]) || in_array($table, $this->hasMany) ) )
+						if($current[$table]['set'] && ( isset($this->options['key'][$table]) || in_array($table, $this->_hasManyTables) ) )
 						{
 							// if we haven't set up this index to have an array
 							if(!isset($current_result[$table][$current[$table]['index']]))
@@ -771,14 +790,18 @@ Class ORM extends Database {
 	 */
 	private function _setJoins()
 	{
+
+			$this->_hasManyTables = $this->hasMany;
+			$this->_belongsToTables = $this->belongsTo;
+
 			// reverse the order so that later they will be the right order
 			$this->options['joins'] = array_reverse($this->options['joins']);
 
 			// if the recursive is 2 or 3 then push the tables for the has many in to the joins
-			if($this->options['recursive'] >= 2 && !empty($this->hasMany))
+			if($this->options['recursive'] >= 2 && !empty($this->_hasManyTables))
 			{
 				// loop through each has many
-				foreach($this->hasMany as $table)
+				foreach($this->_hasManyTables as $table)
 				{
 
 					// push the table into joins
@@ -788,10 +811,10 @@ Class ORM extends Database {
 			}
 
 			// if the recursive is 1 or 3 then pish the tables for the belongsTo into the joins
-			if(($this->options['recursive'] == 3 || $this->options['recursive'] == 1) && !empty($this->belongsTo))
+			if(($this->options['recursive'] == 3 || $this->options['recursive'] == 1) && !empty($this->_belongsToTables))
 			{
 				// loop thrugh each belongsTo
-				foreach($this->belongsTo as $table)
+				foreach($this->_belongsToTables as $table)
 				{
 					// push the table into the joins
 					array_push($this->options['joins'],array($this->_name,$table));
@@ -840,17 +863,17 @@ Class ORM extends Database {
 			$dbTable1 = Core::to_db($table1);
 			$dbTable2 = Core::to_db($table2);
 
-			if(!in_array($table1, $this->hasMany) && $table1 != $this->_name)
+			if(!in_array($table1, $this->_hasManyTables) && $table1 != $this->_name)
 			{
-				array_push($this->hasMany, $table1);
+				array_push($this->_hasManyTables, $table1);
 			}
-			if(!in_array($table2, $this->belongsTo) && !$ManyToMany)
+			if(!in_array($table2, $this->_belongsToTables) && !$ManyToMany)
 			{
-				array_push($this->belongsTo, $table2);
+				array_push($this->_belongsToTables, $table2);
 			}
-			else if(!in_array($table2, $this->hasMany) && $ManyToMany)
+			else if(!in_array($table2, $this->_hasManyTables) && $ManyToMany)
 			{
-				array_push($this->hasMany, $table2);
+				array_push($this->_hasManyTables, $table2);
 			}
 
 			// if the alias is already created then use the other table

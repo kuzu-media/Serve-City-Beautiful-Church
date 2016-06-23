@@ -3,6 +3,7 @@
 define("SYSTEM_PATH", "../../serve_cbc/");
 // define("SYSTEM_PATH","../system/");
 
+
 include(SYSTEM_PATH."core/Core.php");
 include(SYSTEM_PATH."Settings.php");
 
@@ -15,7 +16,7 @@ $database = Core::instantiate("Database");
 $today = Date("w");
 $sunday = Date("m/d/y",strtotime("Sunday"));
 
-$statement = "Select team.name AS team_name, member.name, member.phone, member.email, member.alert_type_id, date.date, shift.time from shift_member LEFT JOIN shift ON shift_member.shift_id = shift.id LEFT JOIN member ON shift_member.member_id = member.id LEFT JOIN date ON shift.date_id = date.id LEFT JOIN team on shift.team_id = team.id WHERE member.reminder_day_id = :reminder_day_id AND date.date = :date ";
+$statement = "Select team.name AS team_name, member.name, member.phone, member.email, member.alert_type_id, date.date, shift.time from shift_member LEFT JOIN shift ON shift_member.shift_id = shift.id LEFT JOIN member ON shift_member.member_id = member.id LEFT JOIN date ON shift.date_id = date.id LEFT JOIN team on shift.team_id = team.id WHERE member.reminder_day_id = :reminder_day_id AND date.date = :date  AND shift_member.shift_member_type_id NOT IN (3,4)";
 $stmt = $database->db->prepare($statement);
 
 // if the execution works
@@ -74,6 +75,9 @@ if($today ===  "3")
 	$team_id = 0;
 	foreach($current_week['Shift'] as $shift)
 	{
+		$shift_members = $shift['ShiftMember'];
+		$shift_members_info = $shift["Member"];
+		$shift = $shift['Shift'];
 		// if we have a new team
 		if($shift['team_id'] !== $team_id)
 		{
@@ -85,11 +89,11 @@ if($today ===  "3")
 		}
 
 		$team_email[$team_id].= "\nServing at ".$shift['time'].":\n";
-		if($shift['members'])
+		if($shift_members_info)
 		{
-			foreach($shift['members'] as $member){
+			foreach($shift_members_info as $member){
 
-				$team_email[$team_id] .= $member['Member']['name']."\n";
+				$team_email[$team_id] .= $member['name']."\n";
 			}
 		}
 		else
@@ -102,7 +106,7 @@ if($today ===  "3")
 			"date_id" => $shift['date_id'],
 			"team_id" => $shift['team_id'],
 			"shift_id" => $shift['id'],
-			"shift_time" => $shift['time']
+			"time" => $shift['time']
 		);
 		array_push($team_info[$team_id], $info);
 
@@ -116,7 +120,7 @@ if($today ===  "3")
 
 		foreach($shifts as $shift)
 		{
-			$team_email[$team_id] .= "\nAvailable at ".$shift['shift_time']."\n";
+			$team_email[$team_id] .= "\nAvailable at ".$shift['time']."\n";
 
 			$member_info = $team_controller->available($shift);
 

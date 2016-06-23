@@ -398,7 +398,7 @@
 
 			if(Auth::login($user))
 			{
-				if($shift_id)
+				if(is_numeric($shift_id))
 				{
 					// get the shift member controller
 					$shift_member_controller = Core::instantiate("ShiftMemberController");
@@ -514,6 +514,8 @@
 	{
 		// log the user out
 		Auth::logout();
+
+		Session::set('joined',false);
 
 		// set up the facebook controller
 		$facebook = Core::instantiate("FacebookAPIController");

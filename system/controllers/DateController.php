@@ -14,6 +14,29 @@
 {
 	public static $allowed_actions = array("index");
 
+	public function before_action()
+	{
+		$this->loadModel('Grouping');
+
+		$this->Grouping->options['recursive'] = 0;
+
+		$groups = $this->Grouping->findAll();
+
+		if($this->Grouping->success)
+		{
+			$now = time();
+			foreach($groups as $group)
+			{
+				$range_start = strtotime($group['start_invite']);
+				$range_end = strtotime($group['end_invite']);
+				if($range_start < $now && $now < $range_end)
+				{
+					$this->layout_data('group_invite',$group);
+				}
+			}
+		}
+	}
+
 	/**
 	 * Get all the Dates
 	 * @return array all the Dates
@@ -68,26 +91,16 @@
 
 
 			$this->loadModel("Shift");
-			$shift_member_controller = Core::instantiate("ShiftMemberController");
 
 			// loop through the dates
-			foreach($dates as &$date)
+			foreach($dates as $index=>$date)
 			{
-				$this->Shift->options['recursive'] = 0;
+				$this->Shift->options['recursive'] = 2;
 				$this->Shift->options['orderBy'] = array("Shift","team_id","ASC");
-				$date['Shift'] = $this->Shift->findByDateId($date['id']);
-
-				if($date['Shift'])
-				{
-					// foreach shift
-					foreach($date['Shift'] as &$shift)
-					{
-						// get the members
-						$shift['members'] = $shift_member_controller->get($shift['id']);
-					}
-				}
-
+				$this->Shift->options['joins'] = array(array('ShiftMember',"Member",true));
+				$dates[$index]['Shift'] = $this->Shift->findByDateId($date['id']);
 			}
+
 
 			// get the team controller
 			$this->loadModel("Team");

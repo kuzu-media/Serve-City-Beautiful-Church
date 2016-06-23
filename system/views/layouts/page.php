@@ -28,15 +28,25 @@
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") !== "2"): ?>
 					<a href="<?php echo Asset::create_url('team','admin')?>">Teams</a>
 					<a href="<?php echo Asset::create_url('team','email')?>">Send Email</a>
+					<a href="<?php echo Asset::create_url('group','get')?>">Groups</a>
 					<a href="<?php echo Asset::create_url('pages','help')?>">Help</a>
 				<?php endif;?>
 				<?php if(Session::get('logged_in') && Auth::user("member_type_id") === "3"): ?>
 					<a href="<?php echo Asset::create_url('member','index')?>">System Admins</a>
 				<?php endif; ?>
+				<?php if(!Session::get('logged_in')): ?><a href="<?php echo Asset::create_url("member","post")?>" class="button pull-right">I am interested in serving</a><?php endif;?>
+
 			</nav>
-			<?php if(!Session::get('logged_in')): ?><a href="<?php echo Asset::create_url("member","post")?>" class="button">I am interested in serving</a><?php endif;?>
 		</div>
 	</div>
+	<?php if(isset($group_invite) && !Session::get('joined')):?>
+	<div class="row">
+		<div class="cols bucket">
+			<h3 class="col-9 cols">Join <?php echo $group_invite['name'];?></h3>
+			<a href="<?php echo Asset::create_url("groupingMember","post",array($group_invite['id']))?>" class="button col-3 cols" id="join_btn">Join Now</a>
+		</div>
+	</div>
+	<?php endif;?>
 	<?php echo $content_for_layout?>
 	<img src="http://www.citybeautifulchurch.com/wp-content/themes/beautiful/images/bg_footer.png" id="footer_img" />
 	<footer>

@@ -155,6 +155,8 @@ Class Auth {
 	public static function logout()
 	{
 
+		Session::set('user',array());
+
 		// set logged in to false
 		Session::set('logged_in',false);
 

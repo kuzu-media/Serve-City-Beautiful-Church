@@ -6,12 +6,11 @@ $light-gray: #666
 =font-size($size,$line-height:1.5)
 
 	font-size: $size * 1px
-	font-size: $size * .1rem
+	font-size: $size * .0625rem
 	line-height: $size * $line-height * 1px
 	line-height: $line-height * 1em
 
 html
-	font-size: 62.5%
 	background-image: url(../img/bg_body.png)
 
 
@@ -20,6 +19,17 @@ body
 	font-family: Arvo, "Times New Roman", serif
 	+font-size(14)
 	margin: 0 auto
+
+.pull-right
+
+	float: right
+
+#join_btn
+
+	float: right
+	padding: 3px 0
+	margin-top: 10px
+	margin-bottom: 10px
 
 header
 
@@ -53,7 +63,7 @@ header
 
 		display: block
 		padding: .5% 2%
-		margin: 0 3%
+		margin: 0 5%
 		float: right
 
 p
@@ -64,7 +74,8 @@ nav
 
 	float: left
 	margin-left: 2.5%
-	width: 65%
+	width: 100%
+	overflow: hidden
 
 	a
 
@@ -153,8 +164,8 @@ input.button
 #footer_img
 
 	width: 100%
-	min-width: 1300px
-	margin: 0
+	max-width: 1300px
+	margin: 0 auto
 	display: block
 
 footer

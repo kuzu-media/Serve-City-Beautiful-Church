@@ -1,14 +1,22 @@
 html {
-  font-size: 62.5%;
   background-image: url(../img/bg_body.png); }
 
 body {
   font-family: Arvo, "Times New Roman", serif;
   font-size: 14px;
-  font-size: 1.4rem;
+  font-size: 0.875rem;
   line-height: 21px;
   line-height: 1.5em;
   margin: 0 auto; }
+
+.pull-right {
+  float: right; }
+
+#join_btn {
+  float: right;
+  padding: 3px 0;
+  margin-top: 10px;
+  margin-bottom: 10px; }
 
 header {
   width: 100%;
@@ -22,7 +30,7 @@ header {
   right: 20px;
   text-transform: uppercase;
   font-size: 12px;
-  font-size: 1.2rem;
+  font-size: 0.75rem;
   line-height: 12px;
   line-height: 1em;
   color: #666666; }
@@ -37,7 +45,7 @@ header {
   .nav_containter .button {
     display: block;
     padding: 0.5% 2%;
-    margin: 0 3%;
+    margin: 0 5%;
     float: right; }
 
 p {
@@ -46,7 +54,8 @@ p {
 nav {
   float: left;
   margin-left: 2.5%;
-  width: 65%; }
+  width: 100%;
+  overflow: hidden; }
   nav a {
     color: white;
     text-transform: uppercase;
@@ -64,7 +73,7 @@ h1 {
   font-weight: 300;
   margin: 0;
   font-size: 26px;
-  font-size: 2.6rem;
+  font-size: 1.625rem;
   line-height: 39px;
   line-height: 1.5em;
   text-transform: uppercase; }
@@ -124,8 +133,8 @@ input.button {
 
 #footer_img {
   width: 100%;
-  min-width: 1300px;
-  margin: 0;
+  max-width: 1300px;
+  margin: 0 auto;
   display: block; }
 
 footer {
@@ -138,7 +147,7 @@ footer {
     color: white;
     text-transform: uppercase;
     font-size: 10px;
-    font-size: 1rem;
+    font-size: 0.625rem;
     line-height: 10px;
     line-height: 1em;
     font-family: Oswald, Arial, sans-serif;
@@ -193,7 +202,7 @@ footer {
       margin: 10px 0 0;
       text-transform: uppercase;
       font-size: 18px;
-      font-size: 1.8rem;
+      font-size: 1.125rem;
       line-height: 27px;
       line-height: 1.5em; }
     .row .bucket h4 {
@@ -203,7 +212,7 @@ footer {
       margin: 10px 0 0;
       text-transform: uppercase;
       font-size: 15px;
-      font-size: 1.5rem;
+      font-size: 0.9375rem;
       line-height: 22.5px;
       line-height: 1.5em; }
     .row .bucket p {
@@ -221,7 +230,7 @@ footer {
   width: 80%;
   margin: 0 auto 20px auto;
   font-size: 12px;
-  font-size: 1.2rem;
+  font-size: 0.75rem;
   line-height: 18px;
   line-height: 1.5em; }
   .or p {
@@ -342,7 +351,8 @@ table {
 #calender .name, .table .name {
   line-height: 1em;
   margin: 2% 0;
-  display: table; }
+  display: table;
+  width: 100%; }
   #calender .name img, .table .name img {
     float: left;
     height: 25px;
@@ -528,7 +538,7 @@ form input[type="text"], form input[type="password"], form textarea {
   box-shadow: 0px 0px 2px 0px #44c99f;
   border: 1px solid #44c99f;
   font-size: 14px;
-  font-size: 1.4rem;
+  font-size: 0.875rem;
   line-height: 21px;
   line-height: 1.5em;
   border: none;

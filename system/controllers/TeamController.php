@@ -30,6 +30,28 @@
 			Core::redirect(AUTH_REDIRECT_CONTROLLER,AUTH_REDIRECT_ACTION);
 
 		}
+
+		$this->loadModel('Grouping');
+
+		$this->Grouping->options['recursive'] = 0;
+
+		$groups = $this->Grouping->findAll();
+
+		if($this->Grouping->success)
+		{
+			$now = time();
+			foreach($groups as $group)
+			{
+				$range_start = strtotime($group['start_invite']);
+				$range_end = strtotime($group['end_invite']);
+				if($range_start < $now && $now < $range_end)
+				{
+					$this->layout_data('group_invite',$group);
+				}
+			}
+		}
+
+
 	}
 
 	/**
@@ -319,49 +341,89 @@
 		// get the team names
 		$team_names = $this->Team->get_team_names();
 
-
 		// set the teams for the view
 		$this->view_data("team_names",$team_names);
 
+		// load the group model
+		$this->loadModel("Grouping");
+
+		// on get this table
+		$this->Grouping->options['recursive'] = 0;
+
+		// only get the id and name
+		$this->Grouping->options['fields'] = array("Grouping"=>array("id","name"));
+
+		// get the group names
+		$group_names = $this->Grouping->findAll();
+
+		// set the teams for the view
+		$this->view_data("group_names",$group_names);
+
 		if($email)
 		{
-			if($email['team'] === 'all')
+
+
+			$this->loadModel('Member');
+
+			$this->Member->belongsTo = array();
+
+			$this->Member->options['fields'] = array("Member"=>array("id","email"));
+
+			if($email['group'] === "none")
 			{
-				$this->loadModel('Member');
 
-				$this->Member->options['recursive'] = 1;
+				if($email['team'] === 'all')
+				{
 
-				$this->Member->belongsTo = array();
+					$members = $this->Member->findAll();
 
-				$this->Member->options['fields'] = array("Member"=>array("id","email"));
+				}
+				else if($email['team'] === "leads")
+				{
 
-				$members = $this->Member->findAll();
+					$this->Member->options['where'] = array("Member.member_type_id IN (1,3)");
 
-			}
-			else if($email['team'] === "leads")
-			{
-				$this->loadModel('Member');
+					$members = $this->Member->findAll();
 
-				$this->Member->options['recursive'] = 1;
+				}
+				else
+				{
+					$team_member_controller = Core::instantiate("TeamMemberController");
 
-				$this->Member->belongsTo = array();
-
-				$this->Member->options['fields'] = array("Member"=>array("id","email"));
-
-				$this->Member->options['where'] = array("Member.member_type_id IN (1,3)");
-
-				$members = $this->Member->findAll();
-
+					$members = $team_member_controller->get($email["team"]);
+				}
 			}
 			else
 			{
-				$team_member_controller = Core::instantiate("TeamMemberController");
+				if($email['team'] === 'all')
+				{
 
-				$members = $team_member_controller->get($email["team"]);
+					$this->Member->options['where'] = array("grouping_id"=>array($email['group'],"GroupingMember"));
+
+					$members = $this->Member->findAll();
+
+				}
+				else if($email['team'] === "leads")
+				{
+
+					$this->Member->options['where'] = array("Member.member_type_id IN (1,3)","grouping_id"=>array($email['group'],"GroupingMember"));
+
+					$members = $this->Member->findAll();
+
+				}
+				else
+				{
+					$this->Member->options['where'] = array("grouping_id"=>array($email['group'],"GroupingMember"),'team_id'=>array($email['team'],"TeamMember"));
+
+					$members = $this->Member->findAll();
+				}
+
 			}
+
 
 			foreach($members as $member)
 			{
+
 				mail($member['Member']['email'],$email['subject'],$email['message'],"From: serve@citybeautifulchurch.com");
 			}
 		}
